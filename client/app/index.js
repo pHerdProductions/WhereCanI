@@ -1,4 +1,4 @@
-import { View,StyleSheet,Text } from 'react-native';
+import { View,StyleSheet,Text,Header } from 'react-native';
 import { Link } from 'expo-router';
 
 export default function Page() {
