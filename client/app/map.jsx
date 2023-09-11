@@ -56,14 +56,14 @@ const map=()=>{
           >
     
             {/* Test Marker for Folly Beach around the Washout*/}
-            <Marker coordinate={regionFollyBeach} image={require('../images/WCImark84.png')}>
+            <Marker coordinate={regionFollyBeach} image={require('./images/WCImark84.png')}>
               <View>
                 <Text style={styles.markerText}>Folly</Text>
               </View>
             </Marker>
           </MapView>
           
-          <Image source={require('../images/WCIlogo.png')}
+          <Image source={require('./images/WCIlogo.png')}
             style={{
               position: 'absolute',
               top: 0,
@@ -82,7 +82,6 @@ const map=()=>{
       );
 
 }
-
 
 // ___ STYLES ___
 const styles = StyleSheet.create({
