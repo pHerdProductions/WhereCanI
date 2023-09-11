@@ -16,7 +16,7 @@ module.exports = {
 
     },
 
-   testGetAll: async (req, res) =>{
+   GetAll: async (req, res) =>{
 
     try {
 
