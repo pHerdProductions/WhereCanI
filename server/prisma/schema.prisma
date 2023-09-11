@@ -11,8 +11,27 @@ datasource db {
 }
 
 model User {
-  id       Int @id @default(autoincrement())
-  name     String
-  email VARCHAR(255) UNIQUE NOT NULL
-  password String
+  id          String    @id @default(uuid())
+  username    String    @unique @db.VarChar(20)
+  password    String
+  email       String    @unique
+  display     String
+  state       String
+  createdAt   DateTime  @default(now())
+}
+
+model POI {
+  id          String    @id @default(uuid())
+  latitude    Decimal   @db.Decimal(21, 18)
+  longitude   Decimal   @db.Decimal(21, 18)
+  state       String
+  city        String
+  zipcode     Int
+  title       String    @db.VarChar(100)
+  description String    @db.VarChar(300)
+  ratings     Int[]
+  ratingAVG   Decimal   @db.Decimal(2, 1)
+  hashtags    String[]  @db.VarChar(30)
+  comments    String[]  @db.VarChar(200)
+  createdAt   DateTime  @default(now())
 }
