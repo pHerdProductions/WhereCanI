@@ -1,8 +1,14 @@
 const router = require('express').Router()
 
-const {testGetAll, testadduser}= require("../controller/testController")
+const {creasePOI, getAllPOI,getIndividualPOI}= require("../controller/poiController")
+const {creaseUser, getAllUser,loginUser}= require("../controller/userController")
 
 
-router.route("/test").get(testGetAll).post(testadduser)
+router.route("/poi").get(getAllPOI).post(creasePOI)
+router.route("/poi/id").get(getIndividualPOI)
+
+router.route("/user").get(loginUser).post(creaseUser)
+
+
 
 module.exports=router

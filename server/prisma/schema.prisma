@@ -32,6 +32,13 @@ model POI {
   ratings     Int[]
   ratingAVG   Decimal   @db.Decimal(2, 1)
   hashtags    String[]  @db.VarChar(30)
-  comments    String[]  @db.VarChar(200)
+  comments    Comment[] 
   createdAt   DateTime  @default(now())
+}
+
+model Comment {
+  id       String    @id @default(uuid())
+  author   User      @relation(fields: [authorId], references: [id])
+  comment  String    @db.VarChar(200)
+  authorId Int
 }

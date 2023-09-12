@@ -1,24 +1,35 @@
 const prisma= require('../db/prisma')
-const {hashPassword, comparePassword} = require("../util/hashPassword")
 
 module.exports = {
-    creaseUser: async (req, res) => {
+    creasePOI: async (req, res) => {
         try {
-          let passwordhashing=hashPassword(req.body.password)
-          req.body.password=passwordhashing
-          let newUser=req.body
+          let newPoi=req.body
       
           await prisma.user.create({
-        data: newUser
+        data: newPoi
       })
-      res.status(200).json({Message:"Success a new user was created",data:newUser})
+
+  //     id          
+  // latitude    
+  // longitude   
+  // state       
+  // city        
+  // zipcode    
+  // title       
+  // description 
+  // ratings     
+  // ratingAVG   
+  // hashtags    
+  // comments    
+  // createdAt 
+      res.status(200).json({Message:"Success a new POI was created",data:newPoi})
         } catch (error) {
             res.status(400).json({message: "error has data was not sent",error: error})
         }
 
     },
 
-   getAllUser: async (req, res) =>{
+   getAllPOI: async (req, res) =>{
 
     try {
 
@@ -34,7 +45,7 @@ module.exports = {
     }
 
    },
-   loginUser: async (req, res) =>{
+   getIndividualPOI: async (req, res) =>{
     try {
       const user = await prisma.user.findUnique({
         where: {
