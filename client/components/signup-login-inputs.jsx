@@ -15,7 +15,7 @@ const CustomTextInput = React.forwardRef((props, ref) => {
           name={props.iconName}
           type={props.iconType}
           style={{ marginLeft: 10, marginRight: 20 }}
-          color='#FFFFFF'
+          color={props.iconColor || '#FFFFFF'}
           size={25}
         />
       }
@@ -76,6 +76,23 @@ const PasswordInput = React.forwardRef((props, ref) => {
       iconName='lock'
       iconType='simple-line-icon'
       placeholder='Password'
+      secureTextEntry={true}
+    />
+  )
+});
+
+const ConfirmPasswordInput = React.forwardRef((props, ref) => {
+  return (
+    <CustomTextInput
+      ref={ref}
+      onSubmitEditing={props.onSubmitEditing}
+      value={props.value}
+      onChange={props.onChange}
+      onChangeText={props.onChangeText}
+      iconColor={props.iconColor}
+      iconName='lock'
+      iconType='simple-line-icon'
+      placeholder='Confirm Password'
       secureTextEntry={true}
     />
   )
@@ -173,4 +190,4 @@ const dropStyle = StyleSheet.create({
   },
 });
 
-export { EmailInput, UsernameInput, PasswordInput, DisplayInput, StateDropDown };
+export { EmailInput, UsernameInput, PasswordInput, ConfirmPasswordInput, DisplayInput, StateDropDown };

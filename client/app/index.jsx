@@ -1,6 +1,6 @@
 // The initial start page: Signup & Login
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ThemeProvider, createTheme, Button, ButtonGroup, withTheme, Text, Icon, Input, InputProps} from '@rneui/themed';
 import { Dropdown } from 'react-native-element-dropdown';
 import { View, ScrollView, StyleSheet, useColorScheme, Keyboard } from 'react-native';
@@ -20,9 +20,10 @@ export default () => {
   const [isReady, setIsReady] = useState(false); // Have our assets loaded?
   const [selectedIndex, setSelectedIndex] = useState(1); // 0 == SignUp | 1 == Login
 
-  const [eMail, setEMail] = useState('');
+  const [email, setEmail] = useState('');
   const [userName, setUserName] = useState('');
-  const [passWord, setPassWord] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
   const [displayName, setDisplayName] = useState('');
 
   const [stateName, setStateName] = useState(''); // Hold and set the State name for the dropdown
@@ -32,14 +33,16 @@ export default () => {
   let emailInput = useRef(null);
   let usernameInput = useRef(null);
   let passwordInput = useRef(null);
+  let confirmInput = useRef(null);
   let displayInput = useRef(null);
   let stateInput = useRef(null);
 
   const switchLogin = (i) => {
-    setEMail('');
+    setEmail('');
     setDisplayName('');
     setUserName('');
-    setPassWord('');
+    setPassword('');
+    setConfirm('');
     setStateName('');
 
     setSelectedIndex(i);
@@ -48,6 +51,10 @@ export default () => {
     if(passwordInput.isFocused()){passwordInput.blur()}
 
     Keyboard.dismiss
+  }
+
+  const consoleLog = (text) => {
+    console.log(text);
   }
 
   // If the user has a preferred color scheme ( dark || light )
@@ -100,8 +107,8 @@ export default () => {
               onSubmitEditing={() => {
                 usernameInput.focus();
               }}
-              value={eMail}
-              onChangeText={text => setEMail(text)}
+              value={email}
+              onChangeText={text => setEmail(text)}
             />
           }
 
@@ -117,11 +124,23 @@ export default () => {
           <SignupLogin.PasswordInput
             ref={(input) => (passwordInput = input)}
             onSubmitEditing={() => {
-              if (selectedIndex == 0){displayInput.focus()};
+              if (selectedIndex == 0){confirmInput.focus()};
             }}
-            value={passWord}
-            onChangeText={text => setPassWord(text)}
+            value={password}
+            onChangeText={text => setPassword(text)}
           />
+
+          {selectedIndex == 0 &&
+            <SignupLogin.ConfirmPasswordInput 
+              ref={(input) => (confirmInput = input)}
+              iconColor={(confirm.length > 0 && confirm == password) ? '#00FF00' : '#FF0000'}
+              onSubmitEditing={() => {
+                displayInput.focus();
+              }}
+              value={confirm}
+              onChangeText={text => setConfirm(text)}
+            />
+          }
 
           {selectedIndex == 0 &&
             <SignupLogin.DisplayInput
@@ -176,6 +195,12 @@ const theme = createTheme({
         textAlign: 'center',
         paddingTop: 50,
         color: '#FFFFFF',
+      },
+      h4Style: {
+        fontSize: 20,
+        textAlign: 'center',
+        paddingTop: 5,
+        color: '#FF0000',
       },
     },
     Button: {
