@@ -2,13 +2,6 @@
 
 code to run to start the backend end
 
-### clone the repo
-
-```
-git clone <http:///.........>
-
-```
-
 ### install all dependencies server folder
 
 in the terminal of the server folder cd./ server run the following comand
