@@ -7,8 +7,8 @@ import { View, StyleSheet } from 'react-native';
 
 // Default custom text input
 const CustomTextInput = React.forwardRef((props, ref) => {
-  return (
-    <Input
+	return (
+		<Input
       ref={ref}
       leftIcon={
         <Icon
@@ -16,7 +16,7 @@ const CustomTextInput = React.forwardRef((props, ref) => {
           type={props.iconType}
           style={{ marginLeft: 10, marginRight: 20 }}
           color={props.iconColor || '#FFFFFF'}
-          size={25}
+          size={props.size || 25}
         />
       }
       placeholder={props.placeholder}
@@ -26,90 +26,64 @@ const CustomTextInput = React.forwardRef((props, ref) => {
       onChange={props.onChange}
       onChangeText={props.onChangeText}
       secureTextEntry={props.secureTextEntry}
-      autoCapitalize='none'
+      autoCapitalize={props.autoCapitalize || 'none'}
       autoCorrect={false}
       style={{borderWidth: 0, color: '#FFFFFF'}}
       returnKeyType='next'
-    />
-  )
+      maxLength={props.maxLength || 100}
+		/>
+	)
 });
 
-const EmailInput = React.forwardRef((props, ref) => {
-  return (
-    <CustomTextInput
-      ref={ref}
-      onSubmitEditing={props.onSubmitEditing}
-      value={props.value}
-      onChange={props.onChange}
-      onChangeText={props.onChangeText}
-      iconName='email-outline'
-      iconType='material-community'
-      placeholder='Email'
-      keyboardType='email-address'
-    />
-  )
+const CityInput = React.forwardRef((props, ref) => {
+	return (
+		<CustomTextInput
+			ref={ref}
+			onSubmitEditing={props.onSubmitEditing}
+			value={props.value}
+			onChange={props.onChange}
+			onChangeText={props.onChangeText}
+			iconName='city-variant-outline'
+			iconType='material-community'
+			placeholder='City'
+			autoCapitalize='words'
+      maxLength={30}
+		/>
+	)
 });
 
-const UsernameInput = React.forwardRef((props, ref) => {
-  return (
-    <CustomTextInput
-      ref={ref}
-      onSubmitEditing={props.onSubmitEditing}
-      value={props.value}
-      onChange={props.onChange}
-      onChangeText={props.onChangeText}
-      iconName='user'
-      iconType='simple-line-icon'
-      placeholder='Username'
-    />
-  )
+const ZipInput = React.forwardRef((props, ref) => {
+	return (
+		<CustomTextInput
+			ref={ref}
+			onSubmitEditing={props.onSubmitEditing}
+			value={props.value}
+			onChange={props.onChange}
+			onChangeText={props.onChangeText}
+			iconName='map-marker-radius-outline'
+			iconType='material-community'
+			placeholder='ZipCode'
+			keyboardType='number-pad'
+      maxLength={5}
+		/>
+	)
 });
 
-const PasswordInput = React.forwardRef((props, ref) => {
-  return (
-    <CustomTextInput
-      ref={ref}
-      onSubmitEditing={props.onSubmitEditing}
-      value={props.value}
-      onChange={props.onChange}
-      onChangeText={props.onChangeText}
-      iconName='lock'
-      iconType='simple-line-icon'
-      placeholder='Password'
-      secureTextEntry={true}
-    />
-  )
-});
-
-const ConfirmPasswordInput = React.forwardRef((props, ref) => {
-  return (
-    <CustomTextInput
-      ref={ref}
-      onSubmitEditing={props.onSubmitEditing}
-      value={props.value}
-      onChange={props.onChange}
-      onChangeText={props.onChangeText}
-      iconColor={props.iconColor}
-      iconName='lock'
-      iconType='simple-line-icon'
-      placeholder='Confirm Password'
-      secureTextEntry={true}
-    />
-  )
-});
-
-const DisplayInput = React.forwardRef((props, ref) => {
-  return (
-    <CustomTextInput
-      ref={ref}
-      value={props.value}
-      onChange={props.onChange}
-      onChangeText={props.onChangeText}
-      iconName='eyeglass'
-      iconType='simple-line-icon'
-      placeholder='Display Name'
-    />
-  )
+const HashtagsInput = React.forwardRef((props, ref) => {
+	return (
+		<Input
+			ref={ref}
+			onSubmitEditing={props.onSubmitEditing}
+			value={props.value}
+			onChange={props.onChange}
+			onChangeText={props.onChangeText}
+			multiline={true}
+			textAlignVertical='top'
+			size={100}
+			placeholder='#Hashtags'
+      maxLength={128}
+		/>
+	)
 });
 
 // ____________ DROPDOWN MENU ____________
@@ -152,7 +126,7 @@ const StateDropDown = React.forwardRef((props, ref) => {
 const dropStyle = StyleSheet.create({
   container: {
     marginHorizontal: 10,
-    marginBottom: 20,
+		marginVertical: 20,
   },
   dropdown: {
     height: 50,
@@ -191,4 +165,4 @@ const dropStyle = StyleSheet.create({
   },
 });
 
-export { EmailInput, UsernameInput, PasswordInput, ConfirmPasswordInput, DisplayInput, StateDropDown };
+export { CityInput, ZipInput, HashtagsInput, StateDropDown };

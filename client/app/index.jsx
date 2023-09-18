@@ -10,10 +10,14 @@ import { Link } from 'expo-router';
 import { cacheImages } from './helpers/AssetsCaching';
 import * as SignupLogin from '../components/signup-login-inputs';
 import { USStates } from '../data/states';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 SplashScreen.preventAutoHideAsync();
 
 const states = USStates;
+
+const Stack = createNativeStackNavigator();
 
 export default () => {
 
@@ -102,6 +106,22 @@ export default () => {
           />
 
           {selectedIndex == 0 &&
+            <SignupLogin.StateDropDown
+              ref={(input) => (stateInput = input)}
+              style={(dropFocus || stateName != '') && { borderColor: '#FFFFFF' }}
+              data={states}
+              placeholder={!dropFocus ? 'Your State...' : '...'}
+              value={stateName}
+              onFocus={() => setDropFocus(true)}
+              onBlur={() => setDropFocus(false)}
+              onChange={item => {
+                setStateName(item.value);
+                setDropFocus(false);
+              }}
+            />
+          }
+
+          {selectedIndex == 0 &&
             <SignupLogin.EmailInput
               ref={(input) => (emailInput = input)}
               onSubmitEditing={() => {
@@ -149,28 +169,13 @@ export default () => {
               onChangeText={text => setDisplayName(text)}
             />
           }
-          
-          {selectedIndex == 0 &&
-            <SignupLogin.StateDropDown
-              ref={(input) => (stateInput = input)}
-              style={(dropFocus || stateName != '') && { borderColor: '#FFFFFF' }}
-              data={states}
-              placeholder={!dropFocus ? 'Your State...' : '...'}
-              value={stateName}
-              onFocus={() => setDropFocus(true)}
-              onBlur={() => setDropFocus(false)}
-              onChange={item => {
-                setStateName(item.value);
-                setDropFocus(false);
-              }}
-            />
-          }
 
           <Button
             title={selectedIndex == 0 ? 'SignUp' : 'Login'}
             type='outline'
             raised
             containerStyle={{marginHorizontal: 100, marginTop: 50}}
+            //onPress={() => navigation.navigate('Profile', {name: 'Jane'})}
           />
           
         </View>
