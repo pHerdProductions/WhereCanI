@@ -3,19 +3,21 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ThemeProvider, createTheme, Button, ButtonGroup, withTheme, Text, Icon, Input, InputProps} from '@rneui/themed';
 import { Dropdown } from 'react-native-element-dropdown';
-import { View, ScrollView, StyleSheet, useColorScheme, Keyboard } from 'react-native';
+import { View, ScrollView, StyleSheet, useColorScheme, Keyboard, TouchableHighlight} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
 import { Link } from 'expo-router';
 import { cacheImages } from './helpers/AssetsCaching';
 import * as SignupLogin from '../components/signup-login-inputs';
 import { USStates } from '../data/states';
+import {useRoute} from "@react-navigation/native"
+import axios from "axios"
 
 SplashScreen.preventAutoHideAsync();
 
 const states = USStates;
 
-export default () => {
+export default ({navigate}) => {
 
   const [isReady, setIsReady] = useState(false); // Have our assets loaded?
   const [selectedIndex, setSelectedIndex] = useState(1); // 0 == SignUp | 1 == Login
@@ -50,12 +52,9 @@ export default () => {
     if(usernameInput.isFocused()){usernameInput.blur()}
     if(passwordInput.isFocused()){passwordInput.blur()}
 
-    Keyboard.dismiss
+     Keyboard.dismiss
   }
 
-  const consoleLog = (text) => {
-    console.log(text);
-  }
 
   // If the user has a preferred color scheme ( dark || light )
   const colorScheme = useColorScheme();
@@ -83,9 +82,41 @@ export default () => {
   if (!isReady) {
     return null;
   }
+  const onPressButton =  (selectedIndex)=>{
+   
+  if (selectedIndex==0){
+    let signup = {email:email, username:userName, password: password,display:displayName,state:stateName }
+
+    axios.post('https://wherecanibackend.onrender.com/user',signup)
+    .then(function (response) {
+      console.log(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+  } else {
+    let login={username:userName, password:password}
+
+       axios.post('https://wherecanibackend.onrender.com/login',login)
+      .then(function (response) {
+        console.log(response.data);
+        console.log(response.data.data.display);
+
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+     
+
+   
+
+    }
+  
+  }
 
   return (
-    
+
     <SafeAreaProvider onLayout={onLayoutRootView}>
       <ThemeProvider theme={theme}>
         <View style={{width: '100%', height: '100%', backgroundColor: '#17001F'}}>
@@ -116,6 +147,7 @@ export default () => {
             ref={(input) => (usernameInput = input)}
             onSubmitEditing={() => {
               passwordInput.focus();
+
             }}
             value={userName}
             onChangeText={text => setUserName(text)}
@@ -125,6 +157,7 @@ export default () => {
             ref={(input) => (passwordInput = input)}
             onSubmitEditing={() => {
               if (selectedIndex == 0){confirmInput.focus()};
+
             }}
             value={password}
             onChangeText={text => setPassword(text)}
@@ -171,8 +204,8 @@ export default () => {
             type='outline'
             raised
             containerStyle={{marginHorizontal: 100, marginTop: 50}}
-          />
-          
+            onPress={() => onPressButton(selectedIndex)} 
+            />
         </View>
       </ThemeProvider>
     </SafeAreaProvider>
