@@ -31,6 +31,7 @@ export default  Login=({navigation}) => {
   const [stateName, setStateName] = useState(''); // Hold and set the State name for the dropdown
   const [dropFocus, setDropFocus] = useState(false); // Is the dropdnown in focus or not
 
+
   // References for our inputs
   let emailInput = useRef(null);
   let usernameInput = useRef(null);
@@ -83,13 +84,15 @@ export default  Login=({navigation}) => {
     return null;
   }
   const onPressButton =  (selectedIndex)=>{
-   
+    let data=[]
+
   if (selectedIndex==0){
     let signup = {email:email, username:userName, password: password,display:displayName,state:stateName }
 
     axios.post('https://wherecanibackend.onrender.com/user',signup)
     .then(function (response) {
       console.log(response.data);
+      data=response.data.data
     })
     .catch(function (error) {
       console.log(error);
@@ -100,20 +103,19 @@ export default  Login=({navigation}) => {
 
        axios.post('https://wherecanibackend.onrender.com/login',login)
       .then(function (response) {
-        console.log(response.data);
         console.log(response.data.data.display);
-
+        data=response.data.data
       })
       .catch(function (error) {
         console.log(error);
       });
-     
-
-   
-
     }
-  
+    console.log(data.display)
+    navigation.navigate('search', data)
+
+    return data
   }
+
 
   return (
 
@@ -205,7 +207,7 @@ export default  Login=({navigation}) => {
             raised
             containerStyle={{marginHorizontal: 100, marginTop: 50}}
             onPress={() =>
-                navigation.navigate('search', {name: 'Jane'})
+                onPressButton(selectedIndex)
               }
           />
           

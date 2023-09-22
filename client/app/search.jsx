@@ -13,7 +13,7 @@ import * as Search from '../components/search-inputs';
 
 
 const states = USStates;
-export default  SearchPage=({navigation}) => {
+export default  SearchPage=({navigation, data}) => {
 
   const [stateName, setStateName] = useState('');
   const [dropFocus, setDropFocus] = useState(false); // Is the dropdnown in focus or not
@@ -27,12 +27,16 @@ export default  SearchPage=({navigation}) => {
   let zipcodeInput = useRef(null);
   let hashtagsInput = useRef(null);
 
+  const { display } = data.params;
+
+
   return (
     <SafeAreaProvider>
       <ThemeProvider theme={theme}>
         <View style={{width: '100%', height: '100%', backgroundColor: '#17001F'}}>
 
           <Text h1>Where Can I...</Text>
+          <Text>display: {JSON.stringify(display)}</Text>
 
           <Search.StateDropDown
             ref={(input) => (stateInput = input)}
