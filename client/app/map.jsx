@@ -1,10 +1,12 @@
 import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Image, StyleSheet, Text, View, Dimensions,SafeAreaView,Button } from 'react-native';
+import { ThemeProvider, createTheme, Button, ButtonGroup, withTheme, Text, Icon, Input, InputProps} from '@rneui/themed';
+
+import { Image, StyleSheet, View, Dimensions,SafeAreaView } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
-const map=()=>{
+const Map=({navigation})=>{
 
     const [region, setRegion] = useState({
         latitude: 32.668870,
@@ -28,14 +30,15 @@ const map=()=>{
 
        <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.nav}>
-        <Link style={styles.button} href="/home">home</Link>
-        <Text>map</Text>
-       
-      <Button
-        title="Press me"
-        onPress={() => Alert.alert('Simple Button pressed')}
-      />
-
+        <Button
+            title='Search'
+            type='outline'
+            raised
+            containerStyle={{marginHorizontal: 100, marginVertical: 40}}
+            onPress={() =>
+              navigation.navigate('search', {name: 'Jane'})
+            }
+          />
         </View>
     
         <View style={styles.container}>
@@ -88,7 +91,7 @@ const styles = StyleSheet.create({
     container: {
       ...StyleSheet.absoluteFillObject,
       flex: 1, //the container will fill the whole screen.
-      marginTop: 30,
+      marginTop: 10,
       justifyContent: 'flex-end',
       alignItems: 'center',
       height: 'calc(100vh - navbarHeight)'
@@ -117,7 +120,7 @@ const styles = StyleSheet.create({
       safeAreaView:{
         flex: 1,
         justifyContent: 'center',
-        marginHorizontal: 20,
+        marginHorizontal: 10,
         flexDirection: "column",
 
       },
@@ -134,5 +137,76 @@ const styles = StyleSheet.create({
   });
 
 
+  
 
-export default map
+const theme = createTheme({
+  lightColors: {
+    primary: '#3d5afe',
+  },
+  darkColors: {
+    primary: '#3d5afe',
+  },
+  mode: 'dark',
+  backgroundColor: '#17001F',
+  components: {
+    Text: {
+      h1Style: {
+        fontSize: 50,
+        textAlign: 'center',
+        paddingTop: 50,
+        color: '#FFFFFF',
+      },
+      h4Style: {
+        fontSize: 20,
+        textAlign: 'center',
+        paddingTop: 5,
+        color: '#FF0000',
+      },
+    },
+    Button: {
+      buttonStyle: {
+        backgroundColor: '#8F00FF',
+        borderColor: '#D49DFF',
+        borderWidth: 1.5,
+      },
+      titleStyle: {
+        color: '#FFFFFF',
+        fontSize: 25,
+        fontWeight: 'bold',
+      }
+    },
+    ButtonGroup: {
+      containerStyle: {
+        height: 50,
+        borderWidth: 1,
+      },
+      buttonStyle: {
+        backgroundColor: '#D49DFF',
+        borderTopWidth: 0,
+        borderLeftWidth: 0,
+        borderBottomWidth: 3,
+        borderRightWidth: 3,
+        borderColor: '#363636',
+      },
+      selectedButtonStyle: {
+        backgroundColor: '#8F00FF',
+        borderTopWidth: 3,
+        borderLeftWidth: 3,
+        borderBottomWidth: 0,
+        borderRightWidth: 0,
+        borderColor: '#363636',
+      },
+      textStyle: {
+        color: '#000000',
+        fontSize: 25,
+        fontWeight: 'bold',
+      },
+      selectedTextStyle: {
+        color: '#FFFFFF',
+      },
+    }
+  },
+});
+
+
+export default Map

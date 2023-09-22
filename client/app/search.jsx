@@ -11,9 +11,9 @@ import { cacheImages } from './helpers/AssetsCaching';
 import { USStates } from '../data/states';
 import * as Search from '../components/search-inputs';
 
-const states = USStates;
 
-export default () => {
+const states = USStates;
+export default  SearchPage=({navigation}) => {
 
   const [stateName, setStateName] = useState('');
   const [dropFocus, setDropFocus] = useState(false); // Is the dropdnown in focus or not
@@ -82,8 +82,10 @@ export default () => {
             type='outline'
             raised
             containerStyle={{marginHorizontal: 100, marginVertical: 40}}
+            onPress={() =>
+              navigation.navigate('map', {name: 'Jane'})
+            }
           />
-
         </View>
       </ThemeProvider>
     </SafeAreaProvider>
