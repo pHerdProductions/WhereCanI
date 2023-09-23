@@ -89,7 +89,7 @@ export default LoginPage = ({navigation}) => {
         navigation.navigate('search', response.data.data)
     })
     .catch(function (error) {
-      console.log(error);
+      console.warn(error);
     });
 
   } else {
@@ -101,7 +101,7 @@ export default LoginPage = ({navigation}) => {
 
       })
       .catch(function (error) {
-        console.log(error);
+        console.warn(error);
         
       });
     }
