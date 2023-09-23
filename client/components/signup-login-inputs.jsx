@@ -152,7 +152,7 @@ const StateDropDown = React.forwardRef((props, ref) => {
 const dropStyle = StyleSheet.create({
   container: {
     marginHorizontal: 10,
-    marginBottom: 15,
+    marginBottom: 20,
   },
   dropdown: {
     height: 50,

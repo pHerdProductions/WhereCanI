@@ -21,11 +21,8 @@ module.exports = {
    getAllUser: async (req, res) =>{
 
     try {
-
     const ret = await prisma.user.findMany()
-    console.log({data:ret, message: "data"})
 
-  
     res.status(200).json({message: "here is your data",data:ret})
 
     } catch (error) {
@@ -55,9 +52,6 @@ module.exports = {
       res.status(400).json({message:"invalide request",Error: error})
     }
 
-   }
-  
-  
-    
-  }
+   } 
+}
 

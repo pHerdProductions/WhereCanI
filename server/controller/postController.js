@@ -1,25 +1,22 @@
 const prisma= require('../db/prisma')
 
 module.exports = {
-    createPOI: async (req, res) => {
+    createPost: async (req, res) => {
         try {
-          let hashtag = req.body.hashtags.split(",")
-          req.body.hashtags=hashtag
-          let newPoi=req.body
-
-          await prisma.poi.create({
-            data: newPoi
-          })
-      res.status(200).json({Message:"Success a new POI was created",data:newPoi})
+          let newPost=req.body
+          await prisma.post.create({
+        data: newPost
+      })
+      res.status(200).json({Message:"Success a new POI was created",data:newPost})
         } catch (error) {
             res.status(400).json({message: "error has data was not sent poi",error: error})
         }
     },
-
-   getAllPOI: async (req, res) =>{
+   getAllPost: async (req, res) =>{
     try {
 
-    const ret = await prisma.poi.findMany()
+    const ret = await prisma.post.findMany()
+    console.log({data:ret, message: "data"})
 
     res.status(200).json({message: "here is your data",data:ret})
 
@@ -30,12 +27,11 @@ module.exports = {
    },
    getIndividualPOI: async (req, res) =>{
     try {
-      const user = await prisma.poi.findUnique({
+      const user = await prisma.post.findUnique({
         where: {
           username: req.body.id
-        }
+        },
       })
-  
     res.status(401).json({message:"invalid password or userid",Error: error})
    
     } catch (error) {
