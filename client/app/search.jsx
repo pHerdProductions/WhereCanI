@@ -13,7 +13,7 @@ import * as Search from '../components/search-inputs';
 
 
 const states = USStates;
-export default  SearchPage=({navigation, data}) => {
+export default  SearchPage=({navigation, route}) => {
 
   const [stateName, setStateName] = useState('');
   const [dropFocus, setDropFocus] = useState(false); // Is the dropdnown in focus or not
@@ -27,7 +27,12 @@ export default  SearchPage=({navigation, data}) => {
   let zipcodeInput = useRef(null);
   let hashtagsInput = useRef(null);
 
-  const { display } = data.params;
+  // const { display, username } = route.params;
+
+  const handleBrowse=()=>{
+    let searchTerm = {state:stateName , city:cityName, zipcode:zipcode,hashtag:hashtags}
+    navigation.navigate('map',searchTerm)
+  }
 
 
   return (
@@ -35,9 +40,9 @@ export default  SearchPage=({navigation, data}) => {
       <ThemeProvider theme={theme}>
         <View style={{width: '100%', height: '100%', backgroundColor: '#17001F'}}>
 
-          <Text h1>Where Can I...</Text>
-          <Text>display: {JSON.stringify(display)}</Text>
+          {/* <Text>User: {JSON.stringify(display)}</Text> */}
 
+          <Text h1>Where Can I...</Text>
           <Search.StateDropDown
             ref={(input) => (stateInput = input)}
             style={(dropFocus || stateName != '') && { borderColor: '#FFFFFF' }}
@@ -72,7 +77,7 @@ export default  SearchPage=({navigation, data}) => {
             type='outline'
             raised
             containerStyle={{marginHorizontal: 100, marginVertical: 40}}
-            //onPress={() => navigation.navigate('Profile', {name: 'Jane'})}
+            onPress={() => handleBrowse() }
           />
 
           <Search.HashtagsInput

@@ -6,7 +6,7 @@ import { ThemeProvider, createTheme, Button, ButtonGroup, withTheme, Text, Icon,
 import { Image, StyleSheet, View, Dimensions,SafeAreaView } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
-const Map=({navigation})=>{
+const Map=({navigation, route})=>{
 
     const [region, setRegion] = useState({
         latitude: 32.668870,
@@ -24,10 +24,12 @@ const Map=({navigation})=>{
     
       const dw = Dimensions.get('screen').width;
       const dh = Dimensions.get('screen').height;
-    
+
+      const { city,zipcode, state } = route.params;
+
+      console.log(city)
 
     return (
-
        <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.nav}>
         <Button
@@ -65,6 +67,8 @@ const Map=({navigation})=>{
               </View>
             </Marker>
           </MapView>
+          
+          
           
           <Image source={require('./images/WCIlogo.png')}
             style={{

@@ -5,12 +5,9 @@ import Login from "./loginsignup"
 import Map from "./map"
 
 import SearchPage from "./search"
-
-
 // import Search from "./search"
+
 const Stack = createNativeStackNavigator();
-
-
 export default function App() {
   return (
     <NavigationContainer independent={true}>
