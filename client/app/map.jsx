@@ -11,7 +11,6 @@ export default MapPage = ({ route, navigation }) => {
     const deviceRatio = deviceWidth / deviceHeight; // Device screen's aspect ratio
 
     const { lat, lng, latDelta } = route.params;
-
     const [region, setRegion] = useState({
         latitude: lat,
         longitude: lng,
@@ -26,7 +25,6 @@ export default MapPage = ({ route, navigation }) => {
         latitudeDelta: 0.01,
         longitudeDelta: 0.01,
       };
-
     return (
        <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.container}>
@@ -47,6 +45,8 @@ export default MapPage = ({ route, navigation }) => {
               </View>
             </Marker>
           </MapView>
+          
+          
           
           <Image source={require('./images/WCIlogo.png')}
             style={{
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     container: {
       ...StyleSheet.absoluteFillObject,
       flex: 1, //the container will fill the whole screen.
-      marginTop: 30,
+      marginTop: 10,
       justifyContent: 'flex-end',
       alignItems: 'center',
       height: 'calc(100vh - navbarHeight)'
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
       safeAreaView:{
         flex: 1,
         justifyContent: 'center',
-        marginHorizontal: 20,
+        marginHorizontal: 10,
         flexDirection: "column",
 
       },
