@@ -40,7 +40,7 @@ export default  SearchPage=({navigation, route}) => {
       <ThemeProvider theme={theme}>
         <View style={{width: '100%', height: '100%', backgroundColor: '#17001F'}}>
 
-          {/* <Text>User: {JSON.stringify(display)}</Text> */}
+          <Text>User: {JSON.stringify(display)}</Text>
 
           <Text h1>Where Can I...</Text>
           <Search.StateDropDown
