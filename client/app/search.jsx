@@ -16,8 +16,8 @@ import { GOOGLE_API } from '@env'
 Geocoder.init(GOOGLE_API);
 
 const states = USStates;
+export default  SearchPage=({navigation, route}) => {
 
-export default  SearchPage = ({ routes, navigation }) => {
 
   const [stateName, setStateName] = useState('');
   const [dropFocus, setDropFocus] = useState(false); // Is the dropdnown in focus or not
@@ -30,6 +30,8 @@ export default  SearchPage = ({ routes, navigation }) => {
   let cityInput = useRef(null);
   let zipcodeInput = useRef(null);
   let hashtagsInput = useRef(null);
+
+   const { display, username } = route.params;
 
   const browseAddress = () => {
     let address = '';
@@ -54,8 +56,9 @@ export default  SearchPage = ({ routes, navigation }) => {
       <ThemeProvider theme={theme}>
         <View style={{width: '100%', height: '100%', backgroundColor: '#17001F'}}>
 
+          <Text>User: {JSON.stringify(display)}</Text>
+
           <Text h1>Where Can I...</Text>
-          {/*<Text>display: {JSON.stringify(display)}</Text>*/}
 
           <Search.StateDropDown
             ref={(input) => (stateInput = input)}
@@ -105,7 +108,7 @@ export default  SearchPage = ({ routes, navigation }) => {
             raised
             containerStyle={{marginHorizontal: 100, marginVertical: 40}}
             onPress={() =>
-              navigation.navigate('map')
+              navigation.navigate('map', {name: 'Jane'})
             }
           />
         </View>

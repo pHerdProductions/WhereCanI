@@ -79,47 +79,40 @@ export default LoginPage = ({navigation}) => {
   if (!isReady) {
     return null;
   }
+  const onPressButton =  (selectedIndex)=>{
 
-  const onPressButton = (selectedIndex) => {
-    let data = {};
+  if (selectedIndex==0){
+    let signup = {email:email, username:userName, password: password,display:displayName,state:stateName }
 
-    if (selectedIndex==0){
-      let signup = { email: email, username: userName, password: password, display: displayName, state: stateName };
+    axios.post('https://wherecanibackend-zpqo.onrender.com/signup',signup)
+    .then(function (response) {
+        navigation.navigate('search', response.data.data)
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 
-      axios.post('https://wherecanibackend-zpqo.onrender.com/signup', signup) // Currently getting success 200 response
-      .then(function (response) { // Note: async/await? Takes awhile to get the response so data doesn't currently receive response.data.data
-        console.log('Signup Response:');
-        console.log(response);
-        data = response.data.data;
-      })
-      .catch(function (error) {
-        console.log('Caught Signup Error:');
-        console.log(error);
-      });
-    }
-    else {
-      let login = { username: userName, password: password };
+  } else {
+    let login={username:userName, password:password}
 
-      axios.post('https://wherecanibackend-zpqo.onrender.com/login', login) // Currently getting error 400 response
+       axios.post('https://wherecanibackend-zpqo.onrender.com/login',login)
       .then(function (response) {
-        console.log('Login Response');
-        console.log(response);
-        data=response.data.data
+        navigation.navigate('search', response.data.data)
+
       })
       .catch(function (error) {
-        console.log('Caught Login Error:');
         console.log(error);
+        
       });
     }
-    console.log('Data: ');
-    console.log(data);
-    navigation.navigate('search');
 
-    return data;
+    return
   }
+ 
+
 
   return (
-    
+
     <SafeAreaProvider onLayout={onLayoutRootView}>
       <ThemeProvider theme={theme}>
         <View style={{width: '100%', height: '100%', backgroundColor: '#17001F'}}>
