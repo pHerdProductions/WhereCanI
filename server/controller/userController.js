@@ -2,7 +2,7 @@ const prisma= require('../db/prisma')
 const {hashPassword, comparePassword} = require("../util/hashPassword")
 
 module.exports = {
-    creaseUser: async (req, res) => {
+    CreateUser: async (req, res) => {
         try {
           let passwordhashing=hashPassword(req.body.password)
           req.body.password=passwordhashing
@@ -29,7 +29,7 @@ module.exports = {
 
       res.status(400).json(error)
     }
-
+    
    },
    loginUser: async (req, res) =>{
     try {
