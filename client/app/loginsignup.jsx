@@ -112,7 +112,6 @@ export default  Login=({navigation}) => {
         
       });
     }
-    navigation.navigate('search', loginData)  //delete this later, this is for developmeent only
 
     return
   }
