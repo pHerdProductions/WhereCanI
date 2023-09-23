@@ -125,7 +125,7 @@ const StateDropDown = React.forwardRef((props, ref) => {
         inputSearchStyle={dropStyle.inputSearchStyle}
         data={props.data}
         search
-        maxHeight={250}
+        maxHeight={280}
         labelField='label'
         valueField='value'
         placeholder={props.placeholder}
@@ -152,6 +152,7 @@ const StateDropDown = React.forwardRef((props, ref) => {
 const dropStyle = StyleSheet.create({
   container: {
     marginHorizontal: 10,
+    marginBottom: 15,
   },
   dropdown: {
     height: 50,
