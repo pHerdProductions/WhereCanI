@@ -86,7 +86,7 @@ export default LoginPage = ({navigation}) => {
     if (selectedIndex==0){
       let signup = { email: email, username: userName, password: password, display: displayName, state: stateName };
 
-      axios.post('https://wherecanibackend.onrender.com/user', signup) // Currently getting success 200 response
+      axios.post('https://wherecanibackend-zpqo.onrender.com/signup', signup) // Currently getting success 200 response
       .then(function (response) { // Note: async/await? Takes awhile to get the response so data doesn't currently receive response.data.data
         console.log('Signup Response:');
         console.log(response);
@@ -100,7 +100,7 @@ export default LoginPage = ({navigation}) => {
     else {
       let login = { username: userName, password: password };
 
-      axios.get('https://wherecanibackend.onrender.com/login', login) // Currently getting error 400 response
+      axios.post('https://wherecanibackend-zpqo.onrender.com/login', login) // Currently getting error 400 response
       .then(function (response) {
         console.log('Login Response');
         console.log(response);
