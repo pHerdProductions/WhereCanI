@@ -3,21 +3,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ThemeProvider, createTheme, Button, ButtonGroup, withTheme, Text, Icon, Input, InputProps} from '@rneui/themed';
 import { Dropdown } from 'react-native-element-dropdown';
-import { View, ScrollView, StyleSheet, useColorScheme, Keyboard, TouchableHighlight} from 'react-native';
+import { View, ScrollView, StyleSheet, useColorScheme, Keyboard, TouchableHighlight } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
-import { Link } from 'expo-router';
 import { cacheImages } from './helpers/AssetsCaching';
 import * as SignupLogin from '../components/signup-login-inputs';
 import { USStates } from '../data/states';
-import axios from "axios"
+import axios from 'axios';
 
 SplashScreen.preventAutoHideAsync();
 
-const states = USStates;
+const states = USStates; // All 50 states to populate State dropdown
 
-
-export default  Login=({navigation}) => {
+export default LoginPage = ({navigation}) => {
 
   const [isReady, setIsReady] = useState(false); // Have our assets loaded?
   const [selectedIndex, setSelectedIndex] = useState(1); // 0 == SignUp | 1 == Login
@@ -30,8 +28,6 @@ export default  Login=({navigation}) => {
 
   const [stateName, setStateName] = useState(''); // Hold and set the State name for the dropdown
   const [dropFocus, setDropFocus] = useState(false); // Is the dropdnown in focus or not
-
-  const [loginData, setLoginData] = useState([]); // Hold and set the State name for the dropdown
 
   // References for our inputs
   let emailInput = useRef(null);
@@ -54,15 +50,14 @@ export default  Login=({navigation}) => {
     if(usernameInput.isFocused()){usernameInput.blur()}
     if(passwordInput.isFocused()){passwordInput.blur()}
 
-     Keyboard.dismiss
+    Keyboard.dismiss
   }
-
 
   // If the user has a preferred color scheme ( dark || light )
   const colorScheme = useColorScheme();
   theme.mode = colorScheme;
 
-  React.useEffect(() => {
+  React.useEffect(() => { 
     loadAssetsAsync();
   }, []);
 
@@ -89,9 +84,8 @@ export default  Login=({navigation}) => {
   if (selectedIndex==0){
     let signup = {email:email, username:userName, password: password,display:displayName,state:stateName }
 
-    axios.post('https://wherecanibackend.onrender.com/user',signup)
+    axios.post('https://wherecanibackend-zpqo.onrender.com/signup',signup)
     .then(function (response) {
-        setLoginData(response.data.data)
         navigation.navigate('search', response.data.data)
     })
     .catch(function (error) {
@@ -101,9 +95,8 @@ export default  Login=({navigation}) => {
   } else {
     let login={username:userName, password:password}
 
-       axios.post('https://wherecanibackend.onrender.com/login',login)
+       axios.post('https://wherecanibackend-zpqo.onrender.com/login',login)
       .then(function (response) {
-        setLoginData(response.data.data)
         navigation.navigate('search', response.data.data)
 
       })
@@ -144,6 +137,7 @@ export default  Login=({navigation}) => {
               value={stateName}
               onFocus={() => setDropFocus(true)}
               onBlur={() => setDropFocus(false)}
+              onSubmitEditing={() => emailInput.focus()}
               onChange={item => {
                 setStateName(item.value);
                 setDropFocus(false);
@@ -154,9 +148,7 @@ export default  Login=({navigation}) => {
           {selectedIndex == 0 &&
             <SignupLogin.EmailInput
               ref={(input) => (emailInput = input)}
-              onSubmitEditing={() => {
-                usernameInput.focus();
-              }}
+              onSubmitEditing={() => {usernameInput.focus()}}
               value={email}
               onChangeText={text => setEmail(text)}
             />
@@ -164,10 +156,7 @@ export default  Login=({navigation}) => {
 
           <SignupLogin.UsernameInput
             ref={(input) => (usernameInput = input)}
-            onSubmitEditing={() => {
-              passwordInput.focus();
-
-            }}
+            onSubmitEditing={() => {passwordInput.focus()}}
             value={userName}
             onChangeText={text => setUserName(text)}
           />
@@ -176,7 +165,6 @@ export default  Login=({navigation}) => {
             ref={(input) => (passwordInput = input)}
             onSubmitEditing={() => {
               if (selectedIndex == 0){confirmInput.focus()};
-
             }}
             value={password}
             onChangeText={text => setPassword(text)}
@@ -186,9 +174,7 @@ export default  Login=({navigation}) => {
             <SignupLogin.ConfirmPasswordInput 
               ref={(input) => (confirmInput = input)}
               iconColor={(confirm.length > 0 && confirm == password) ? '#00FF00' : '#FF0000'}
-              onSubmitEditing={() => {
-                displayInput.focus();
-              }}
+              onSubmitEditing={() => {displayInput.focus()}}
               value={confirm}
               onChangeText={text => setConfirm(text)}
             />
@@ -207,7 +193,7 @@ export default  Login=({navigation}) => {
             type='outline'
             raised
             containerStyle={{marginHorizontal: 100, marginTop: 50}}
-            onPress={() => onPressButton(selectedIndex) }
+            onPress={() => onPressButton(selectedIndex)}
           />
           
         </View>
@@ -230,7 +216,7 @@ const theme = createTheme({
       h1Style: {
         fontSize: 50,
         textAlign: 'center',
-        paddingTop: 50,
+        paddingTop: 30,
         color: '#FFFFFF',
       },
       h4Style: {

@@ -10,10 +10,14 @@ import { Link, Redirect } from 'expo-router';
 import { cacheImages } from './helpers/AssetsCaching';
 import { USStates } from '../data/states';
 import * as Search from '../components/search-inputs';
+import Geocoder from 'react-native-geocoding';
+import { GOOGLE_API } from '@env'
 
+Geocoder.init(GOOGLE_API);
 
 const states = USStates;
 export default  SearchPage=({navigation, route}) => {
+
 
   const [stateName, setStateName] = useState('');
   const [dropFocus, setDropFocus] = useState(false); // Is the dropdnown in focus or not
@@ -27,11 +31,23 @@ export default  SearchPage=({navigation, route}) => {
   let zipcodeInput = useRef(null);
   let hashtagsInput = useRef(null);
 
-  // const { display, username } = route.params;
+   const { display, username } = route.params;
 
-  const handleBrowse=()=>{
-    let searchTerm = {state:stateName , city:cityName, zipcode:zipcode,hashtag:hashtags}
-    navigation.navigate('map',searchTerm)
+  const browseAddress = () => {
+    let address = '';
+    if (cityName != '') {address += cityName};
+    if (stateName != '') {address += (address != '' ? ', ' : '') + stateName};
+    if (zipcode != '') {address += ', ' + zipcode};
+    console.log(address);
+    Geocoder.from(address)
+    .then(json => {
+        let locData = json.results[0];
+        let LatLng = locData.geometry.location;
+        let Bounds = locData.geometry.bounds
+        let delta = Bounds.northeast.lat - Bounds.southwest.lat;
+        navigation.navigate('map', { lat: LatLng.lat, lng: LatLng.lng, latDelta: delta});
+    })
+    .catch(error => console.warn(error));
   }
 
 
@@ -43,6 +59,7 @@ export default  SearchPage=({navigation, route}) => {
           <Text>User: {JSON.stringify(display)}</Text>
 
           <Text h1>Where Can I...</Text>
+
           <Search.StateDropDown
             ref={(input) => (stateInput = input)}
             style={(dropFocus || stateName != '') && { borderColor: '#FFFFFF' }}
@@ -55,15 +72,14 @@ export default  SearchPage=({navigation, route}) => {
               setStateName(item.value);
               setDropFocus(false);
             }}
+            onSubmitEditing={() => cityInput.focus()}
           />
 
           <Search.CityInput
             ref={(input) => (cityInput = input)}
             value={cityName}
             onChangeText={text => setCityName(text)}
-            onSubmitEditing={() => {
-              zipcodeInput.focus();
-            }}
+            onSubmitEditing={() => zipcodeInput.focus()}
           />
 
           <Search.ZipInput
@@ -77,7 +93,7 @@ export default  SearchPage=({navigation, route}) => {
             type='outline'
             raised
             containerStyle={{marginHorizontal: 100, marginVertical: 40}}
-            onPress={() => handleBrowse() }
+            onPress={() => browseAddress()}
           />
 
           <Search.HashtagsInput
