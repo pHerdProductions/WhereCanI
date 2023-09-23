@@ -34,7 +34,7 @@ export default  SearchPage = ({ routes, navigation }) => {
   const browseAddress = () => {
     let address = '';
     if (cityName != '') {address += cityName};
-    if (stateName != '') {address += ', ' + stateName};
+    if (stateName != '') {address += (address != '' ? ', ' : '') + stateName};
     if (zipcode != '') {address += ', ' + zipcode};
     console.log(address);
     Geocoder.from(address)
