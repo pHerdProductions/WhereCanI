@@ -192,7 +192,7 @@ export default LoginPage = ({navigation}) => {
             title={selectedIndex == 0 ? 'SignUp' : 'Login'}
             type='outline'
             raised
-            containerStyle={{marginHorizontal: 100, marginTop: 50}}
+            containerStyle={{marginHorizontal: 100, marginTop: 20}}
             onPress={() => onPressButton(selectedIndex)}
           />
           
