@@ -5,9 +5,6 @@ import { ThemeProvider, createTheme, Button, ButtonGroup, withTheme, Text, Icon,
 import { Dropdown } from 'react-native-element-dropdown';
 import { View, ScrollView, StyleSheet, useColorScheme, Keyboard } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import * as SplashScreen from 'expo-splash-screen';
-import { Link, Redirect } from 'expo-router';
-import { cacheImages } from './helpers/AssetsCaching';
 import { USStates } from '../data/states';
 import * as Search from '../components/search-inputs';
 import Geocoder from 'react-native-geocoding';
@@ -16,8 +13,8 @@ import { GOOGLE_API } from '@env'
 Geocoder.init(GOOGLE_API);
 
 const states = USStates;
-export default  SearchPage=({navigation, route}) => {
 
+export default  SearchPage=({navigation, route}) => {
 
   const [stateName, setStateName] = useState('');
   const [dropFocus, setDropFocus] = useState(false); // Is the dropdnown in focus or not
@@ -49,7 +46,6 @@ export default  SearchPage=({navigation, route}) => {
     })
     .catch(error => console.warn(error));
   }
-
 
   return (
     <SafeAreaProvider>
@@ -117,7 +113,7 @@ export default  SearchPage=({navigation, route}) => {
   );
 }
 
-
+// Create seperate file for our theme?
 const theme = createTheme({
   lightColors: {
     primary: '#3d5afe',
