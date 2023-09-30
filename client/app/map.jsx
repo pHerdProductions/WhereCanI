@@ -1,8 +1,44 @@
-import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Image, StyleSheet, Text, View, Dimensions, SafeAreaView, Button } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import axios  from 'axios';
+
+// For fetching POIs, having an issue with getting them and then having them load on render. Seems to be out of sync.
+// Maybe fetch POIs on the search page and pass the data to the map page
+const fetchPOIS = () => {
+  axios.get('https://wherecanibackend-zpqo.onrender.com/poi')
+  .then(function (response) {
+    //setAllPOIS(response.data.data);
+    console.log('POIs:');
+    console.log(response.data.data);
+    return response.data.data;
+  })
+  .catch(function (error) {
+    console.warn(error);
+  });
+}
+
+const markers = [
+  {
+    latitude: 32.6678706790745,
+    longitude: -79.90863058239091,
+    title: 'Marker 1',
+    description: 'This is the first marker.',
+  },
+  {
+    latitude: 32.67787067907449,
+    longitude: -79.90863058239091,
+    title: 'Marker 2',
+    description: 'This is the second marker.',
+  },
+  {
+    latitude: 32.66887067907449,
+    longitude: -79.90863058239091,
+    title: 'Marker 3',
+    description: 'This is the third marker.',
+  },
+];
 
 export default MapPage = ({ route, navigation }) => {
 
@@ -19,57 +55,58 @@ export default MapPage = ({ route, navigation }) => {
       });
     
       // Sample region Type -- of folly beach
-      const regionFollyBeach = {
-        latitude: 32.667870679074494,
-        longitude: -79.90863058239091,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      };
+    const regionFollyBeach = {
+      latitude: 32.667870679074494,
+      longitude: -79.90863058239091,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    };
+
+    const [allPOIS, setAllPOIS] = useState([]);
+    
     return (
-       <SafeAreaView style={styles.safeAreaView}>
-        <View style={styles.container}>
-        
-        {/*Render our MapView*/}
-          <MapView
-            style={styles.map}
-            initialRegion={region} // Specify our initial coordinates/region
+      <SafeAreaView style={styles.safeAreaView}>
+       <View style={styles.container}>
+       
+       {/*Render our MapView*/}
+         <MapView
+           style={styles.map}
+           initialRegion={region} // Specify our initial coordinates/region
 
-            // When the user stops scrolling/panning, set the region: 
-            onRegionChangeComplete = {(region) => setRegion(region)}
-          >
-    
-            {/* Test Marker for Folly Beach around the Washout*/}
-            <Marker coordinate={regionFollyBeach} image={require('./images/WCImark84.png')}>
-              <View>
-                <Text style={styles.markerText}>Folly</Text>
-              </View>
-            </Marker>
-          </MapView>
-          
-          
-          
-          <Image source={require('./images/WCIlogo.png')}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: 80, 
-              height: 40,
-          }}/>
-    
-          <StatusBar style='auto' />
-          <Text style={styles.text}>Current LAT: {region.latitude}</Text>
-          <Text style={styles.text}>Current LON: {region.longitude}</Text>
-          <Text style={styles.text}>Current LATD: {region.latitudeDelta}</Text>
-          <Text style={styles.text}>Current LNGD: {region.longitudeDelta}</Text>
+           // When the user stops scrolling/panning, set the region: 
+           onRegionChangeComplete = {(region) => setRegion(region)}
+         >
+   
+          {/* Map the array of POIs to a bunch of markers to display on the map */}
+          {markers.map((marker, index) => (
+            <Marker
+              key={index}
+              coordinate={marker}
+              title={marker.title}
+              description={marker.description}
+            />
+          ))}
 
-        </View>
-      </SafeAreaView>
-    );
+         </MapView>
+         
+         <Image source={require('./images/WCIlogo.png')}
+           style={{
+             position: 'absolute',
+             top: 0,
+             left: 0,
+             width: 80, 
+             height: 40,
+         }}/>
+   
+         <StatusBar style='auto' />
+
+       </View>
+     </SafeAreaView>
+   );
 
 }
 
-// ___ STYLES ___
+// ___ STYLES ___ Create a seperate file for the style to clean up code?
 const styles = StyleSheet.create({
     container: {
       ...StyleSheet.absoluteFillObject,
