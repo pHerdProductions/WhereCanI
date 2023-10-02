@@ -10,13 +10,14 @@ export default MapPage = ({ route, navigation }) => {
     const deviceHeight = Dimensions.get('screen').height;
     const deviceRatio = deviceWidth / deviceHeight; // Device screen's aspect ratio
 
-    const { lat, lng, latDelta } = route.params;
-    const [region, setRegion] = useState({
-        latitude: lat,
-        longitude: lng,
-        latitudeDelta: latDelta,
-        longitudeDelta: latDelta * deviceRatio,
-      });
+    // const { lat, lng, latDelta } = route.params;
+    console.log(route.params)
+    // const [region, setRegion] = useState({
+    //     latitude: lat,
+    //     longitude: lng,
+    //     latitudeDelta: latDelta,
+    //     longitudeDelta: latDelta * deviceRatio,
+    //   });
     
       // Sample region Type -- of folly beach
       const regionFollyBeach = {
@@ -25,6 +26,23 @@ export default MapPage = ({ route, navigation }) => {
         latitudeDelta: 0.01,
         longitudeDelta: 0.01,
       };
+
+      this.state={
+        markers: []
+      }
+      // this.handlePress=this.handlePress.bind(this)
+
+      function handlePress(e){
+        this.setState({
+          markers:[
+            ...this.state.markers,{
+              coordinate: e.nativeEvent.coordinate
+            }
+          ]
+        })
+      }
+
+
     return (
        <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.container}>
@@ -32,18 +50,29 @@ export default MapPage = ({ route, navigation }) => {
         {/*Render our MapView*/}
           <MapView
             style={styles.map}
-            initialRegion={region} // Specify our initial coordinates/region
-
+            initialRegion={regionFollyBeach} // Specify our initial coordinates/region
+            onPress={this.handlePress}
             // When the user stops scrolling/panning, set the region: 
-            onRegionChangeComplete = {(region) => setRegion(region)}
+            // onRegionChangeComplete = {(regionFollyBeach) => setRegion(regionFollyBeach)}
           >
     
             {/* Test Marker for Folly Beach around the Washout*/}
-            <Marker coordinate={regionFollyBeach} image={require('./images/WCImark84.png')}>
-              <View>
+            {/* <Marker draggable={true} anchor={{point:(0,3)}} coordinate={regionFollyBeach} image={require('./images/WCImark84.png')}
+              // onRegionChangeComplete = {(anchor) => anchor (regionFollyBeach)}
+              // onPress={console.log(point)}
+
+            > */}
+
+              {/* <View>
                 <Text style={styles.markerText}>Folly</Text>
               </View>
-            </Marker>
+            </Marker> */}
+
+{
+              this.state.markers.map((marker)=>{
+                return <Marker {...marker} image={require('./images/WCImark84.png')}/>
+              })
+            }
           </MapView>
           
           
@@ -58,10 +87,10 @@ export default MapPage = ({ route, navigation }) => {
           }}/>
     
           <StatusBar style='auto' />
-          <Text style={styles.text}>Current LAT: {region.latitude}</Text>
+          {/* <Text style={styles.text}>Current LAT: {region.latitude}</Text>
           <Text style={styles.text}>Current LON: {region.longitude}</Text>
           <Text style={styles.text}>Current LATD: {region.latitudeDelta}</Text>
-          <Text style={styles.text}>Current LNGD: {region.longitudeDelta}</Text>
+          <Text style={styles.text}>Current LNGD: {region.longitudeDelta}</Text> */}
 
         </View>
       </SafeAreaView>

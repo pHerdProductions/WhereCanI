@@ -12,8 +12,8 @@ export default function App() {
   return (
     <NavigationContainer independent={true}>
       <Stack.Navigator>
-        <Stack.Screen name='login' component={LoginPage}  options={{title: 'Welcome'}} />
-        <Stack.Screen name='search' component={SearchPage} />
+        {/* <Stack.Screen name='login' component={LoginPage}  options={{title: 'Welcome'}} /> */}
+        {/* <Stack.Screen name='search' component={SearchPage} /> */}
         <Stack.Screen name='map' component={MapPage} />
       </Stack.Navigator>
     </NavigationContainer>
