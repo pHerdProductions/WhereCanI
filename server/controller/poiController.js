@@ -16,11 +16,16 @@ module.exports = {
   },
 
   getAllPOI: async (req, res) =>{
-	//let zipcode = req.query.title;
+	let hashtags = req.query.hashtags;
+	console.log(hashtags);
+	let arrHashtags = hashtags.split(' ');
+	console.log(arrHashtags);
   	try {
 			const result = await prisma.poi.findMany({
 				where: {
-					title: req.query.title
+					hashtags: {
+						hasSome: arrHashtags,
+					},
 				},
 			}
 			)
