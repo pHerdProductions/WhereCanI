@@ -35,11 +35,11 @@ module.exports = {
   	try {
 			//console.log('req.body:');
 			//console.log(req.body);
-			const title = req.body.title;
-			console.log(title);
-			const result = await prisma.poi.findUnique({
+			const zipcode = req.body.zipcode;
+			console.log(zipcode);
+			const result = await prisma.poi.findMany({
 				where: {
-					title: 'Folly Beach1',
+					zipcode: zipcode,
 				},
 			})
 			console.log('result: ');
