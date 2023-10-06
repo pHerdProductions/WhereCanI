@@ -17,13 +17,7 @@ module.exports = {
 
   getAllPOI: async (req, res) =>{
   	try {
-			const result = await prisma.poi.findMany({
-				where: {
-					title: {
-						equals: 'Folly Beach1',
-					},
-				},
-			})
+			const result = await prisma.poi.findMany()
 			console.log('result: ');
 			console.log(result);
 			res.status(200).json({ message: 'Success, here is your data: ' , data: result });
@@ -34,9 +28,10 @@ module.exports = {
 
 	searchPOI: async (req, res) =>{
   	try {
-			console.log('req.body:');
-			console.log(req.body);
-			//const title = req.body.title;
+			//console.log('req.body:');
+			//console.log(req.body);
+			const title = req.body.title;
+			console.log(title);
 			const result = await prisma.poi.findUnique({
 				where: {
 					title: 'Folly Beach1',
