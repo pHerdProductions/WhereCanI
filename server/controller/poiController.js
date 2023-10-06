@@ -16,10 +16,11 @@ module.exports = {
   },
 
   getAllPOI: async (req, res) =>{
+	let zipcode = req.query.zipcode;
   	try {
 			const result = await prisma.poi.findMany({
 				where: {
-					title: 'Folly Beach1'
+					zipcode: zipcode,
 				},
 			}
 			)
