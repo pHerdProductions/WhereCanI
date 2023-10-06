@@ -17,7 +17,12 @@ module.exports = {
 
   getAllPOI: async (req, res) =>{
   	try {
-			const result = await prisma.poi.findMany()
+			const result = await prisma.poi.findMany({
+				where: {
+					title: 'Folly Beach1'
+				},
+			}
+			)
 			console.log('result: ');
 			console.log(result);
 			res.status(200).json({ message: 'Success, here is your data: ' , data: result });
