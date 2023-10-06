@@ -30,13 +30,14 @@ module.exports = {
    },
    getIndividualPOI: async (req, res) =>{
     try {
-      const user = await prisma.poi.findUnique({
+      const poi = await prisma.poi.findMany({
         where: {
-          username: req.body.id
+          title: req.query.title
         }
       })
+	  console.log(poi)
   
-    res.status(401).json({message:"invalid password or userid",Error: error})
+    res.status(401).json({message:"success",data:poi})
    
     } catch (error) {
       res.status(400).json({message:"invalide request",Error: error})
