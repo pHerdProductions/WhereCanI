@@ -1,13 +1,13 @@
-const express = require('express')
-const router= require("./router")
-const cors = require("cors")
+import express, { urlencoded, json } from 'express'
+import { router } from "./router"
+import cors from "cors"
 const app = express()
 const port = 4000
 
 require("dotenv").config()
 
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+app.use(urlencoded({ extended: false }));
+app.use(json());
 app.use(cors());
 
 app.get('/', (req, res) => {
