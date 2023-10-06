@@ -1,8 +1,7 @@
 // The Search page, comes after Login / Signup page
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { ThemeProvider, createTheme, Button, ButtonGroup, withTheme, Text, Icon, Input, InputProps} from '@rneui/themed';
-import { Dropdown } from 'react-native-element-dropdown';
 import { View, ScrollView, StyleSheet, useColorScheme, Keyboard } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { USStates } from '../data/states';
@@ -10,6 +9,10 @@ import * as Search from '../components/search-inputs';
 import Geocoder from 'react-native-geocoding';
 import { GOOGLE_API } from '@env'
 import axios  from 'axios';
+
+Geocoder.init(GOOGLE_API);
+
+const states = USStates;
 
 // Generate an address for use in the Geocoder
 const generateAddress = (stateName, cityName, zipcode) => {
@@ -19,10 +22,6 @@ const generateAddress = (stateName, cityName, zipcode) => {
   if (zipcode != '') {address += (address != '' ? ', ' : '') + zipcode};
   return address;
 }
-
-Geocoder.init(GOOGLE_API);
-
-const states = USStates;
 
 export default SearchPage = ({navigation, route}) => {
 
@@ -39,9 +38,11 @@ export default SearchPage = ({navigation, route}) => {
 
   //const { display, username } = route.params;
 
+  /* Handle Geocoder from an address to load the map from the input location and 
+     navigate to map page with all POIs from the DB */
   const browseAddress = (POIs) => {
     let address = generateAddress(stateName, cityName, zipcode);
-    console.log(address);
+    console.log('Address: ' + address);
     Geocoder.from(address)
     .then(json => {
         let locData = json.results[0];
@@ -53,7 +54,7 @@ export default SearchPage = ({navigation, route}) => {
     .catch(error => console.warn(error));
   }
 
-  // Fetch All POIs from the DB
+  // Browse All POIs from the DB
   const browseAllPOIs = () => {
     axios.get('https://wherecanibackend-zpqo.onrender.com/poi')
     .then(function (response) {
