@@ -10,15 +10,23 @@ import * as Search from '../components/search-inputs';
 import Geocoder from 'react-native-geocoding';
 import { GOOGLE_API } from '@env'
 
+// Generate an address for use in the Geocoder
+const generateAddress = (stateName, cityName, zipcode) => {
+  let address = '';
+  if (cityName != '') {address += cityName};
+  if (stateName != '') {address += (address != '' ? ', ' : '') + stateName};
+  if (zipcode != '') {address += (address != '' ? ', ' : '') + zipcode};
+  return address;
+}
+
 Geocoder.init(GOOGLE_API);
 
 const states = USStates;
 
-export default  SearchPage=({navigation, route}) => {
+export default SearchPage = ({navigation, route}) => {
 
-  const [stateName, setStateName] = useState('');
   const [dropFocus, setDropFocus] = useState(false); // Is the dropdnown in focus or not
-
+  const [stateName, setStateName] = useState('');
   const [cityName, setCityName] = useState('');
   const [zipcode, setZipcode] = useState('');
   const [hashtags, setHashtags] = useState('');
@@ -28,13 +36,10 @@ export default  SearchPage=({navigation, route}) => {
   let zipcodeInput = useRef(null);
   let hashtagsInput = useRef(null);
 
-   const { display, username } = route.params;
+  const { display, username } = route.params;
 
   const browseAddress = () => {
-    let address = '';
-    if (cityName != '') {address += cityName};
-    if (stateName != '') {address += (address != '' ? ', ' : '') + stateName};
-    if (zipcode != '') {address += ', ' + zipcode};
+    let address = generateAddress(stateName, cityName, zipcode);
     console.log(address);
     Geocoder.from(address)
     .then(json => {
@@ -42,7 +47,7 @@ export default  SearchPage=({navigation, route}) => {
         let LatLng = locData.geometry.location;
         let Bounds = locData.geometry.bounds
         let delta = Bounds.northeast.lat - Bounds.southwest.lat;
-        navigation.navigate('map', { lat: LatLng.lat, lng: LatLng.lng, latDelta: delta});
+        navigation.navigate('map', { lat: LatLng.lat, lng: LatLng.lng, latDelta: delta });
     })
     .catch(error => console.warn(error));
   }
