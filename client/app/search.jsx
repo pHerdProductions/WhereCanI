@@ -9,6 +9,7 @@ import { USStates } from '../data/states';
 import * as Search from '../components/search-inputs';
 import Geocoder from 'react-native-geocoding';
 import { GOOGLE_API } from '@env'
+import axios  from 'axios';
 
 // Generate an address for use in the Geocoder
 const generateAddress = (stateName, cityName, zipcode) => {
@@ -36,9 +37,9 @@ export default SearchPage = ({navigation, route}) => {
   let zipcodeInput = useRef(null);
   let hashtagsInput = useRef(null);
 
-  const { display, username } = route.params;
+  //const { display, username } = route.params;
 
-  const browseAddress = () => {
+  const browseAddress = (POIs) => {
     let address = generateAddress(stateName, cityName, zipcode);
     console.log(address);
     Geocoder.from(address)
@@ -47,9 +48,22 @@ export default SearchPage = ({navigation, route}) => {
         let LatLng = locData.geometry.location;
         let Bounds = locData.geometry.bounds
         let delta = Bounds.northeast.lat - Bounds.southwest.lat;
-        navigation.navigate('map', { lat: LatLng.lat, lng: LatLng.lng, latDelta: delta });
+        navigation.navigate('map', { lat: LatLng.lat, lng: LatLng.lng, latDelta: delta, POIs: POIs });
     })
     .catch(error => console.warn(error));
+  }
+
+  // Fetch All POIs from the DB
+  const browseAllPOIs = () => {
+    axios.get('https://wherecanibackend-zpqo.onrender.com/poi')
+    .then(function (response) {
+      console.log('POIs:');
+      console.log(response.data.data);
+      browseAddress(response.data.data)
+    })
+    .catch(function (error) {
+      console.warn(error);
+    });
   }
 
   return (
@@ -57,7 +71,7 @@ export default SearchPage = ({navigation, route}) => {
       <ThemeProvider theme={theme}>
         <View style={{width: '100%', height: '100%', backgroundColor: '#17001F'}}>
 
-          <Text>User: {JSON.stringify(display)}</Text>
+          {/*<Text>User: {JSON.stringify(display)}</Text>*/}
 
           <Text h1>Where Can I...</Text>
 
@@ -94,7 +108,7 @@ export default SearchPage = ({navigation, route}) => {
             type='outline'
             raised
             containerStyle={{marginHorizontal: 100, marginVertical: 40}}
-            onPress={() => browseAddress()}
+            onPress={() => browseAllPOIs()}
           />
 
           <Search.HashtagsInput
