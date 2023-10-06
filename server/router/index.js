@@ -1,8 +1,8 @@
 const router = require('express').Router();
 
-import { createPOI, getAllPOI, getIndividualPOI, searchPOI } from '../controller/poiController';
-import { createUser, getAllUser, loginUser } from '../controller/userController';
-import { createPost, getAllPost } from '../controller/postController';
+const { createPOI, getAllPOI, getIndividualPOI, searchPOI } = require('../controller/poiController');
+const { createUser, getAllUser, loginUser } = require('../controller/userController');
+const { createPost, getAllPost } = require('../controller/postController');
 
 router.route('/signup').post(createUser);
 router.route('/login').post(loginUser);
@@ -12,4 +12,4 @@ router.route('/search').post(searchPOI);
 
 router.route('/post').get(getAllPost).post(createPost);
 
-export { router };
+module.exports=router;
