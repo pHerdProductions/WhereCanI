@@ -1,4 +1,4 @@
-const prisma= require('../db/prisma')
+const prisma= require('../db/prisma').default
 
 module.exports = {
     createPost: async (req, res) => {
