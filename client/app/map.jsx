@@ -46,13 +46,16 @@ export default MapPage = ({ route, navigation }) => {
     const deviceHeight = Dimensions.get('screen').height;
     const deviceRatio = deviceWidth / deviceHeight; // Device screen's aspect ratio
 
-    const { lat, lng, latDelta } = route.params;
+    const { lat, lng, latDelta, POIs } = route.params;
+
     const [region, setRegion] = useState({
-        latitude: lat,
-        longitude: lng,
-        latitudeDelta: latDelta,
-        longitudeDelta: latDelta * deviceRatio,
-      });
+      latitude: lat,
+      longitude: lng,
+      latitudeDelta: latDelta,
+      longitudeDelta: latDelta * deviceRatio,
+    });
+
+    const [POIS, setPOIS] = useState(POIs);
     
       // Sample region Type -- of folly beach
     const regionFollyBeach = {
@@ -62,7 +65,15 @@ export default MapPage = ({ route, navigation }) => {
       longitudeDelta: 0.01,
     };
 
-    const [allPOIS, setAllPOIS] = useState([]);
+    const generatePOICoordinate = (POI) => {
+      const coordinate = {
+        latitude: parseFloat(POI.latitude),
+        longitude: parseFloat(POI.longitude),
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      }
+      return coordinate;
+    };
     
     return (
       <SafeAreaView style={styles.safeAreaView}>
@@ -78,12 +89,12 @@ export default MapPage = ({ route, navigation }) => {
          >
    
           {/* Map the array of POIs to a bunch of markers to display on the map */}
-          {markers.map((marker, index) => (
+          {POIS.map((POI, index) => (
             <Marker
               key={index}
-              coordinate={marker}
-              title={marker.title}
-              description={marker.description}
+              coordinate={generatePOICoordinate(POI)}
+              title={POI.title}
+              description={POI.description}
             />
           ))}
 
