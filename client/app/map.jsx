@@ -1,44 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Image, StyleSheet, Text, View, Dimensions, SafeAreaView, Button } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import axios  from 'axios';
-
-// For fetching POIs, having an issue with getting them and then having them load on render. Seems to be out of sync.
-// Maybe fetch POIs on the search page and pass the data to the map page
-const fetchPOIS = () => {
-  axios.get('https://wherecanibackend-zpqo.onrender.com/poi')
-  .then(function (response) {
-    //setAllPOIS(response.data.data);
-    console.log('POIs:');
-    console.log(response.data.data);
-    return response.data.data;
-  })
-  .catch(function (error) {
-    console.warn(error);
-  });
-}
-
-const markers = [
-  {
-    latitude: 32.6678706790745,
-    longitude: -79.90863058239091,
-    title: 'Marker 1',
-    description: 'This is the first marker.',
-  },
-  {
-    latitude: 32.67787067907449,
-    longitude: -79.90863058239091,
-    title: 'Marker 2',
-    description: 'This is the second marker.',
-  },
-  {
-    latitude: 32.66887067907449,
-    longitude: -79.90863058239091,
-    title: 'Marker 3',
-    description: 'This is the third marker.',
-  },
-];
 
 export default MapPage = ({ route, navigation }) => {
 
@@ -46,6 +9,7 @@ export default MapPage = ({ route, navigation }) => {
     const deviceHeight = Dimensions.get('screen').height;
     const deviceRatio = deviceWidth / deviceHeight; // Device screen's aspect ratio
 
+    // Received parameters from the search page
     const { lat, lng, latDelta, POIs } = route.params;
 
     const [region, setRegion] = useState({
@@ -56,15 +20,8 @@ export default MapPage = ({ route, navigation }) => {
     });
 
     const [POIS, setPOIS] = useState(POIs);
-    
-      // Sample region Type -- of folly beach
-    const regionFollyBeach = {
-      latitude: 32.667870679074494,
-      longitude: -79.90863058239091,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
-    };
 
+    // Generate a proper coordinate from POI data for use in a <Marker/>
     const generatePOICoordinate = (POI) => {
       const coordinate = {
         latitude: parseFloat(POI.latitude),
