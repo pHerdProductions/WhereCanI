@@ -34,8 +34,8 @@ module.exports = {
 
 	searchPOI: async (req, res) =>{
   	try {
-			console.log('req:');
-			console.log(req);
+			console.log('req.body:');
+			console.log(req.body);
 			//const title = req.body.title;
 			const result = await prisma.poi.findUnique({
 				where: {
