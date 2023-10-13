@@ -1,7 +1,7 @@
 import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Image, StyleSheet, Text, View, Dimensions, SafeAreaView, Button, TouchableOpacity, Alert } from 'react-native';
+import { Image, StyleSheet, Text, View, Dimensions, SafeAreaView, Button, TouchableOpacity, Alert,Modal, Pressable } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 
@@ -18,6 +18,7 @@ export default MapPage = ({ route, navigation }) => {
     const [marker, setMarker]=useState([])
     const [counter, setCounter] = useState(0);
     const [address, setAddress] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
 
 
     // const { lat, lng, latDelta } = route.params;
@@ -45,9 +46,9 @@ export default MapPage = ({ route, navigation }) => {
             longitudeDelta: 0.01,
           }
           
-         
         setMarker([...marker,<Marker draggable={true} key={counter} anchor={{point:(0,3)}} coordinate={area} image={require('./images/WCImark84.png')}
           onPress={(e)=>{onPoiPress(e)}}
+
           >
           <Text>{address}</Text>            
           </Marker>
@@ -62,7 +63,9 @@ export default MapPage = ({ route, navigation }) => {
       //     setAddress((address)=>address=addressComponent)
       // })
       // .catch(error => console.warn(error));
+      console.log(e.nativeEvent.latitude)
       setAddress("map")
+      setModalVisible(true)
 
         }
 
@@ -79,9 +82,40 @@ export default MapPage = ({ route, navigation }) => {
             // When the user stops scrolling/panning, set the region: 
             // onRegionChangeComplete = {(regionFollyBeach) => setRegion(regionFollyBeach)}
           >
+            <View             style={styles.map}
+>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Hello World!</Text>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.textStyle}>Hide Modal</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+      {/* <Pressable 
+        style={[styles.button, styles.buttonOpen]}
+        onPress={() => setModalVisible(true)}>
+        <Text style={styles.textStyle}>Show Modal</Text>
+      </Pressable> */}
+    </View>
+    <View             style={styles.map}
+>
+
                 {
                   marker
                 }
+    </View>
         
           </MapView>
           
@@ -102,7 +136,7 @@ export default MapPage = ({ route, navigation }) => {
           <Text style={styles.text}>Current LATD: {region.latitudeDelta}</Text>
           <Text style={styles.text}>Current LNGD: {region.longitudeDelta}</Text> */}
 
-        </View>
+        </View >
       </SafeAreaView>
     );
 
@@ -155,5 +189,46 @@ const styles = StyleSheet.create({
         borderRadius:"20px",
         width:100,
         
+      },
+      centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+      },
+      modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+      },
+      button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+      },
+      buttonOpen: {
+        backgroundColor: '#F194FF',
+      },
+      buttonClose: {
+        backgroundColor: '#2196F3',
+      },
+      textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+      },
+      modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
       },
   });
