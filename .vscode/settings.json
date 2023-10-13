@@ -1,0 +1,7 @@
+{
+	"prettier.printWidth": 200,
+	"prettier.jsxSingleQuote": true,
+	"prettier.singleQuote": true,
+	"prettier.useEditorConfig": false,
+	"prettier.useTabs": true
+}
