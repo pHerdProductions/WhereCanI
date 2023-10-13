@@ -1,7 +1,7 @@
 import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
-import { Image, StyleSheet, Text, View, Dimensions, SafeAreaView, Button, TouchableOpacity, Alert,Modal, Pressable } from 'react-native';
+import React, { useState, useEffect} from 'react';
+import { Image, StyleSheet, Text, View, Dimensions, SafeAreaView, Alert,Modal, Pressable,TextInput} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 
@@ -30,6 +30,11 @@ export default MapPage = ({ route, navigation }) => {
     //     longitudeDelta: latDelta * deviceRatio,
     //   });
     
+
+    const [title, onChangetitle] = React.useState('title');
+    const [desc, onChangedesc] = React.useState('des');
+    const [hash, onChangehash] = React.useState('hashtags');
+
       // Sample region Type -- of folly beach
       const regionFollyBeach = {
         latitude: 32.667870679074494,
@@ -45,28 +50,31 @@ export default MapPage = ({ route, navigation }) => {
             latitudeDelta: 0.01,
             longitudeDelta: 0.01,
           }
-          
+          Geocoder.from(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)
+          .then(json => {
+          var addressComponent = json.results[0].formatted_address;
+          setAddress((address)=>address=addressComponent)
+          console.log(address)
+          })
+          .catch(error => console.warn(error));     
+            
         setMarker([...marker,<Marker draggable={true} key={counter} anchor={{point:(0,3)}} coordinate={area} image={require('./images/WCImark84.png')}
-          onPress={(e)=>{onPoiPress(e)}}
-
+          title={"Point Of Interest"} description={address}  
+        onPress={(e)=>{onPoiPress(e)}}
           >
-          <Text>{address}</Text>            
+
           </Marker>
         ])
         setCounter((counter) => counter + 1)
         }
 
-        function onPoiPress(e){
-      //     Geocoder.from(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)
-      //     .then(json => {
-      //     var addressComponent = json.results[0].formatted_address;
-      //     setAddress((address)=>address=addressComponent)
-      // })
-      // .catch(error => console.warn(error));
-      console.log(e.nativeEvent.latitude)
-      setAddress("map")
-      setModalVisible(true)
+        useEffect(() => {
+          // Update the document title using the browser API
+        },[marker]);
 
+
+        function onPoiPress(e){
+          setModalVisible(true)
         }
 
 
@@ -82,9 +90,11 @@ export default MapPage = ({ route, navigation }) => {
             // When the user stops scrolling/panning, set the region: 
             // onRegionChangeComplete = {(regionFollyBeach) => setRegion(regionFollyBeach)}
           >
-            <View             style={styles.map}
->
-      <Modal
+                {
+                  marker
+                }     
+          </MapView>
+          <Modal     style={{position: "absolute", bottom: 100}}
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -94,7 +104,22 @@ export default MapPage = ({ route, navigation }) => {
         }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
+            <Text style={styles.modalText}>Enter POI</Text>
+        <TextInput
+        style={styles.input}
+        onChangeText={onChangetitle}
+        value={title}
+      />
+              <TextInput
+        style={styles.input}
+        onChangeText={onChangedesc}
+        value={desc}
+      />
+              <TextInput
+        style={styles.input}
+        onChangeText={onChangehash}
+        value={hash}
+      />
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={() => setModalVisible(!modalVisible)}>
@@ -102,23 +127,7 @@ export default MapPage = ({ route, navigation }) => {
             </Pressable>
           </View>
         </View>
-      </Modal>
-      {/* <Pressable 
-        style={[styles.button, styles.buttonOpen]}
-        onPress={() => setModalVisible(true)}>
-        <Text style={styles.textStyle}>Show Modal</Text>
-      </Pressable> */}
-    </View>
-    <View             style={styles.map}
->
-
-                {
-                  marker
-                }
-    </View>
-        
-          </MapView>
-          
+      </Modal>   
           
           
           <Image source={require('./images/WCIlogo.png')}
@@ -230,5 +239,11 @@ const styles = StyleSheet.create({
       modalText: {
         marginBottom: 15,
         textAlign: 'center',
+      },
+      input: {
+        height: 40,
+        margin: 12,
+        borderWidth: 1,
+        padding: 10,
       },
   });
