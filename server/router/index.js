@@ -7,9 +7,9 @@ const { createPost, getAllPost } = require('../controller/postController');
 router.route('/signup').post(createUser);
 router.route('/login').post(loginUser);
 router.route('/poi').get(getAllPOI).post(createPOI);
-router.route('/search').get(searchPOI);
+router.route('/poi/search').get(searchPOI);
 //router.route("/poi/id").get(getIndividualPOI)
 
 router.route('/post').get(getAllPost).post(createPost);
 
-module.exports=router;
+module.exports = router;

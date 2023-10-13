@@ -4,6 +4,7 @@
 	"prettier.singleQuote": true,
 	"prettier.useEditorConfig": false,
 	"prettier.useTabs": true,
+	"prettier.singleAttributePerLine": true,
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.formatOnSave": true
 }
