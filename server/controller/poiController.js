@@ -1,77 +1,74 @@
 const prisma = require('../db/prisma');
 
 module.exports = {
-
 	createPOI: async (req, res) => {
-    try {
+		try {
 			req.body.hashtags = req.body.hashtags.split(',');
-			let newPoi = req.body;;
+			let newPoi = req.body;
 			await prisma.poi.create({
-					data: newPoi
-				})
+				data: newPoi,
+			});
 			res.status(200).json({ message: 'Success, a new POI was created: ', data: newPoi });
 		} catch (error) {
-				res.status(400).json({ message: 'Error, POI was not created: ', error: error });
+			res.status(400).json({ message: 'Error, POI was not created: ', error: error });
 		}
-  },
+	},
 
-  getAllPOI: async (req, res) =>{
-	let hashtags = req.query.hashtags;
-	console.log(hashtags);
-	let arrHashtags = hashtags.split(' ');
-	console.log(arrHashtags);
-  	try {
-			const result = await prisma.poi.findMany({
-				where: {
-					hashtags: {
-						hasSome: arrHashtags,
-					},
-				},
-			}
-			)
+	getAllPOI: async (req, res) => {
+		try {
+			const result = await prisma.poi.findMany();
 			console.log('result: ');
 			console.log(result);
-			res.status(200).json({ message: 'Success, here is your data: ' , data: result });
+			res.status(200).json({ message: 'Success, here is your data: ', data: result });
 		} catch (error) {
-    	res.status(400).json({message: 'Error, POI was not created: ', error: error });
-    }
-  },
+			res.status(400).json({ message: 'Error, POI was not created: ', error: error });
+		}
+	},
 
-	searchPOI: async (req, res) =>{
-  	try {
-			//console.log('req.body:');
-			//console.log(req.body);
-			const zipcode = req.body.zipcode;
-			console.log(zipcode);
+	searchPOI: async (req, res) => {
+		console.log(req.body);
+		let stateName = req.body.state;
+		let cityName = req.body.city;
+		let zipcode = parseInt(req.query.zipcode);
+		let hashtags = req.query.hashtags;
+		let arrHashtags = [];
+		if (hashtags) {
+			arrHashtags = hashtags.split(' ');
+		}
+		try {
 			const result = await prisma.poi.findMany({
 				where: {
-					zipcode: zipcode,
+					AND: [
+						{ state: stateName },
+						{ city: cityName },
+						{ zipcode: zipcode },
+						{
+							hashtags: {
+								hasSome: arrHashtags,
+							},
+						},
+					],
 				},
-			})
+			});
 			console.log('result: ');
 			console.log(result);
-			res.status(200).json({ message: 'Success, here is your data: ' , data: ret });
+			res.status(200).json({ message: 'Success, here is your data: ', data: result });
 		} catch (error) {
-			console.log('req:');
-			console.log(req);
-    	res.status(400).json({message: 'Error, POI was not created: ', error: error });
-    }
-  },
+			res.status(400).json({ message: 'Error: ', error: error });
+		}
+	},
 
-  getIndividualPOI: async (req, res) =>{
-    try {
-      const user = await prisma.poi.findUnique({
-        where: {
-          username: req.body.id
-        }
-      })
-  
-    res.status(401).json({message:"invalid password or userid",Error: error})
-   
-    } catch (error) {
-      res.status(400).json({message:"invalide request",Error: error})
-    }
-   }
-    
-  }
+	getIndividualPOI: async (req, res) => {
+		try {
+			const user = await prisma.poi.findUnique({
+				where: {
+					username: req.body.id,
+				},
+			});
 
+			res.status(401).json({ message: 'invalid password or userid', Error: error });
+		} catch (error) {
+			res.status(400).json({ message: 'invalide request', Error: error });
+		}
+	},
+};
