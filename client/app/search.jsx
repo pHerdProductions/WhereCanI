@@ -61,7 +61,6 @@ export default SearchPage = ({ navigation, route }) => {
 
 	// Browse All POIs from the DB
 	const browseAllPOIs = () => {
-		let hashtagsStr = hashtags.replace('#', ' ');
 		axios
 			.get(`https://wherecanibackend-zpqo.onrender.com/poi`)
 			.then(function (response) {
