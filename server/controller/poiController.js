@@ -21,7 +21,7 @@ module.exports = {
 			console.log(result);
 			res.status(200).json({ message: 'Success, here is your data: ', data: result });
 		} catch (error) {
-			res.status(400).json({ message: 'Error, POI was not created: ', error: error });
+			res.status(400).json({ message: 'Error, could not fetch POIs: ', error: error });
 		}
 	},
 
