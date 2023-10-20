@@ -3,7 +3,7 @@ const prisma = require('../db/prisma');
 module.exports = {
 	createPOI: async (req, res) => {
 		try {
-			req.body.hashtags = req.body.hashtags.split(',');
+			//req.body.hashtags = req.body.hashtags.split(',');
 			let newPoi = req.body;
 			await prisma.poi.create({
 				data: newPoi,
