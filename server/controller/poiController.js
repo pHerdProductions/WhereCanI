@@ -25,20 +25,23 @@ module.exports = {
 	},
 
 	searchPOI: async (req, res) => {
-		const stateName = req.body.state;
+		let data = req.body;
+		console.log('DATA: ');
+		console.log(data);
+		/*const stateName = req.body.state;
 		const cityName = req.body.city;
 		const zipcode = parseInt(req.body.zipcode);
-		const hashtags = req.body.hashtags;
+		const hashtags = req.body.hashtags;*/
 		try {
 			const result = await prisma.poi.findMany({
 				where: {
 					AND: [
-						{ state: stateName },
-						cityName ? { city: cityName } : {},
-						zipcode ? { zipcode: zipcode } : {},
+						{ state: data.stateName },
+						data.cityName ? { city: data.cityName } : {},
+						data.zipcode ? { zipcode: data.zipcode } : {},
 						{
 							hashtags: {
-								hasSome: hashtags,
+								hasSome: data.hashtags,
 							},
 						},
 					],
