@@ -3,7 +3,6 @@ const prisma = require('../db/prisma');
 module.exports = {
 	createPOI: async (req, res) => {
 		try {
-			//req.body.hashtags = req.body.hashtags.split(',');
 			let newPoi = req.body;
 			await prisma.poi.create({
 				data: newPoi,
@@ -21,7 +20,7 @@ module.exports = {
 			console.log(result);
 			res.status(200).json({ message: 'Success, here is your data: ', data: result });
 		} catch (error) {
-			res.status(400).json({ message: 'Error, POI was not created: ', error: error });
+			res.status(400).json({ message: 'Error, could not fetch POIs: ', error: error });
 		}
 	},
 
