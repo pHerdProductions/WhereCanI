@@ -37,7 +37,7 @@ module.exports = {
 				where: {
 					AND: [
 						{ state: data.state },
-						data.cityName ? { city: data.city } : {},
+						data.city ? { city: data.city } : {},
 						data.zipcode ? { zipcode: data.zipcode } : {},
 						{
 							hashtags: {
