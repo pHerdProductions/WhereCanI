@@ -36,8 +36,8 @@ module.exports = {
 			const result = await prisma.poi.findMany({
 				where: {
 					AND: [
-						{ state: data.stateName },
-						data.cityName ? { city: data.cityName } : {},
+						{ state: data.state },
+						data.cityName ? { city: data.city } : {},
 						data.zipcode ? { zipcode: data.zipcode } : {},
 						{
 							hashtags: {
