@@ -34,7 +34,7 @@ module.exports = {
 				where: {
 					AND: [
 						{ state: stateName },
-						cityName != '' ? { city: cityName } : {},
+						cityName ? { city: cityName } : {},
 						zipcode ? { zipcode: zipcode } : {},
 						{
 							hashtags: {
@@ -48,6 +48,8 @@ module.exports = {
 			console.log(result);
 			res.status(200).json({ message: 'Success, here is your data: ', data: result });
 		} catch (error) {
+			console.log('ERROR: ');
+			console.log(error);
 			res.status(400).json({ message: 'Error searching POIs: ', error: error });
 		}
 	},
