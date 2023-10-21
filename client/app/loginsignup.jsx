@@ -1,6 +1,6 @@
 // The initial start page: Signup & Login
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ThemeProvider, createTheme, Button, ButtonGroup, withTheme, Text, Icon, Input, InputProps } from '@rneui/themed';
 import { Dropdown } from 'react-native-element-dropdown';
 import { View, ScrollView, StyleSheet, useColorScheme, Keyboard, TouchableHighlight } from 'react-native';
@@ -28,6 +28,8 @@ export default LoginPage = ({ navigation }) => {
 	const [stateName, setStateName] = useState(''); // Hold and set the State name for the dropdown
 	const [dropFocus, setDropFocus] = useState(false); // Is the dropdnown in focus or not
 
+	const [isLoading, setIsLoading] = useState(false);
+
 	// References for our inputs
 	let emailInput = useRef(null);
 	let usernameInput = useRef(null);
@@ -53,14 +55,14 @@ export default LoginPage = ({ navigation }) => {
 			passwordInput.blur();
 		}
 
-		Keyboard.dismiss;
+		Keyboard.dismiss();
 	};
 
 	// If the user has a preferred color scheme ( dark || light )
 	const colorScheme = useColorScheme();
 	theme.mode = colorScheme;
 
-	React.useEffect(() => {
+	useEffect(() => {
 		loadAssetsAsync();
 	}, []);
 
@@ -70,7 +72,7 @@ export default LoginPage = ({ navigation }) => {
 		setIsReady(true);
 	};
 
-	const onLayoutRootView = React.useCallback(async () => {
+	const onLayoutRootView = useCallback(async () => {
 		if (isReady) {
 			await SplashScreen.hideAsync();
 		}
@@ -80,6 +82,8 @@ export default LoginPage = ({ navigation }) => {
 		return null;
 	}
 	const onPressButton = (selectedIndex) => {
+		Keyboard.dismiss();
+		setIsLoading(true);
 		if (selectedIndex == 0) {
 			let signup = { email: email, username: userName, password: password, display: displayName, state: stateName };
 
@@ -87,6 +91,9 @@ export default LoginPage = ({ navigation }) => {
 				.post('https://wherecanibackend-zpqo.onrender.com/signup', signup)
 				.then(function (response) {
 					navigation.navigate('search', response.data.data);
+				})
+				.finally(() => {
+					setIsLoading(false);
 				})
 				.catch(function (error) {
 					console.warn(error);
@@ -98,6 +105,9 @@ export default LoginPage = ({ navigation }) => {
 				.post('https://wherecanibackend-zpqo.onrender.com/login', login)
 				.then(function (response) {
 					navigation.navigate('search', response.data.data);
+				})
+				.finally(() => {
+					setIsLoading(false);
 				})
 				.catch(function (error) {
 					console.warn(error);
@@ -114,6 +124,7 @@ export default LoginPage = ({ navigation }) => {
 					<Text h1>Where Can I...</Text>
 
 					<ButtonGroup
+						disabled={isLoading}
 						buttons={['SignUp', 'Login']}
 						selectedIndex={selectedIndex}
 						onPress={(value) => {
@@ -127,6 +138,7 @@ export default LoginPage = ({ navigation }) => {
 					{selectedIndex == 0 && (
 						<SignupLogin.StateDropDown
 							ref={(input) => (stateInput = input)}
+							disabled={isLoading}
 							style={(dropFocus || stateName != '') && { borderColor: '#FFFFFF' }}
 							data={states}
 							placeholder={!dropFocus ? 'Your State...' : '...'}
@@ -144,6 +156,7 @@ export default LoginPage = ({ navigation }) => {
 					{selectedIndex == 0 && (
 						<SignupLogin.EmailInput
 							ref={(input) => (emailInput = input)}
+							disabled={isLoading}
 							onSubmitEditing={() => {
 								usernameInput.focus();
 							}}
@@ -154,6 +167,7 @@ export default LoginPage = ({ navigation }) => {
 
 					<SignupLogin.UsernameInput
 						ref={(input) => (usernameInput = input)}
+						disabled={isLoading}
 						onSubmitEditing={() => {
 							passwordInput.focus();
 						}}
@@ -163,6 +177,7 @@ export default LoginPage = ({ navigation }) => {
 
 					<SignupLogin.PasswordInput
 						ref={(input) => (passwordInput = input)}
+						disabled={isLoading}
 						onSubmitEditing={() => {
 							if (selectedIndex == 0) {
 								confirmInput.focus();
@@ -175,6 +190,7 @@ export default LoginPage = ({ navigation }) => {
 					{selectedIndex == 0 && (
 						<SignupLogin.ConfirmPasswordInput
 							ref={(input) => (confirmInput = input)}
+							disabled={isLoading}
 							iconColor={confirm.length > 0 && confirm == password ? '#00FF00' : '#FF0000'}
 							onSubmitEditing={() => {
 								displayInput.focus();
@@ -187,12 +203,16 @@ export default LoginPage = ({ navigation }) => {
 					{selectedIndex == 0 && (
 						<SignupLogin.DisplayInput
 							ref={(input) => (displayInput = input)}
+							disabled={isLoading}
 							value={displayName}
 							onChangeText={(text) => setDisplayName(text)}
 						/>
 					)}
 
 					<Button
+						disabled={isLoading}
+						loading={isLoading}
+						loadingProps={{ color: '#FFFFFF', size: 31.5 }}
 						title={selectedIndex == 0 ? 'SignUp' : 'Login'}
 						type='outline'
 						raised
@@ -253,6 +273,12 @@ const theme = createTheme({
 				borderBottomWidth: 3,
 				borderRightWidth: 3,
 				borderColor: '#363636',
+			},
+			disabledStyle: {
+				backgroundColor: '#9D62CC',
+			},
+			disabledSelectedStyle: {
+				backgroundColor: '#440079',
 			},
 			selectedButtonStyle: {
 				backgroundColor: '#8F00FF',

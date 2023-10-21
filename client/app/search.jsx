@@ -41,6 +41,8 @@ export default SearchPage = ({ navigation, route }) => {
 	let zipcodeInput = useRef(null);
 	let hashtagsInput = useRef(null);
 
+	const [isSearching, setIsSearching] = useState(false);
+
 	//const { display, username } = route.params;
 
 	/* Handle Geocoder from an address to load the map from the input location and 
@@ -56,11 +58,16 @@ export default SearchPage = ({ navigation, route }) => {
 				let delta = Bounds.northeast.lat - Bounds.southwest.lat;
 				navigation.navigate('map', { lat: LatLng.lat, lng: LatLng.lng, latDelta: delta, POIs: POIs });
 			})
+			.finally(() => {
+				setIsSearching(false);
+			})
 			.catch((error) => console.warn(error));
 	};
 
 	// Browse All POIs from the DB
 	const browseAllPOIs = () => {
+		Keyboard.dismiss();
+		setIsSearching(true);
 		axios
 			.get(`https://wherecanibackend-zpqo.onrender.com/poi`)
 			.then(function (response) {
@@ -76,6 +83,8 @@ export default SearchPage = ({ navigation, route }) => {
 	/* Search POIs based on parameters. Right now must have all input fields entered, working on making it dynamic
      so the only field that is required is the State */
 	const searchPOIs = () => {
+		Keyboard.dismiss();
+		setIsSearching(true);
 		let hashtagsStr = hashtags.replace('#', ' ');
 		axios
 			.get(`https://wherecanibackend-zpqo.onrender.com/poi/search?state=${stateName}&city=${cityName}&zipcode=${zipcode}&hashtags=${hashtagsStr}`)
@@ -99,6 +108,7 @@ export default SearchPage = ({ navigation, route }) => {
 
 					<Search.StateDropDown
 						ref={(input) => (stateInput = input)}
+						disabled={isSearching}
 						style={(dropFocus || stateName != '') && { borderColor: '#FFFFFF' }}
 						data={states}
 						placeholder={!dropFocus ? 'Your State...' : '...'}
@@ -114,6 +124,7 @@ export default SearchPage = ({ navigation, route }) => {
 
 					<Search.CityInput
 						ref={(input) => (cityInput = input)}
+						disabled={isSearching}
 						value={cityName}
 						onChangeText={(text) => setCityName(text)}
 						onSubmitEditing={() => zipcodeInput.focus()}
@@ -121,6 +132,7 @@ export default SearchPage = ({ navigation, route }) => {
 
 					<Search.ZipInput
 						ref={(input) => (zipcodeInput = input)}
+						disabled={isSearching}
 						value={zipcode}
 						onChangeText={(text) => setZipcode(text)}
 					/>
@@ -131,10 +143,14 @@ export default SearchPage = ({ navigation, route }) => {
 						raised
 						containerStyle={{ marginHorizontal: 100, marginVertical: 40 }}
 						onPress={() => browseAllPOIs()}
+						loading={isSearching}
+						loadingProps={{ color: '#FFFFFF', size: 31.5 }}
+						disabled={isSearching}
 					/>
 
 					<Search.HashtagsInput
 						ref={(input) => (hashtagsInput = input)}
+						disabled={isSearching}
 						value={hashtags}
 						onChangeText={(text) => setHashtags(text)}
 					/>
@@ -145,6 +161,9 @@ export default SearchPage = ({ navigation, route }) => {
 						raised
 						containerStyle={{ marginHorizontal: 100, marginVertical: 40 }}
 						onPress={() => searchPOIs()}
+						loading={isSearching}
+						loadingProps={{ color: '#FFFFFF', size: 31.5 }}
+						disabled={isSearching}
 					/>
 				</View>
 			</ThemeProvider>
