@@ -1,8 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState, useRef, useEffect } from 'react';
-import { Image, StyleSheet, Text, View, Dimensions, SafeAreaView, Alert, Modal, Pressable, TextInput } from 'react-native';
+import { Image, StyleSheet, Text, View, Dimensions, SafeAreaView, Alert, Modal, Pressable } from 'react-native';
 import { Button, Input } from '@rneui/themed';
-import MapView, { Callout, Marker } from 'react-native-maps';
+import MapView from 'react-native-maps';
 import { CustomMarker } from '../components/custom-marker';
 import Geocoder from 'react-native-geocoding';
 import axios from 'axios';
@@ -14,11 +14,6 @@ export default MapPage = ({ route, navigation }) => {
 	const deviceWidth = Dimensions.get('screen').width;
 	const deviceHeight = Dimensions.get('screen').height;
 	const deviceRatio = deviceWidth / deviceHeight; // Device screen's aspect ratio
-
-	const [marker, setMarker] = useState([]);
-	const [counter, setCounter] = useState(0);
-	const [address, setAddress] = useState('');
-	const [modalVisible, setModalVisible] = useState(false);
 
 	// Received parameters from the search page
 	const { lat, lng, latDelta, POIs } = route.params;
@@ -45,14 +40,30 @@ export default MapPage = ({ route, navigation }) => {
 	const [newZip, setNewZip] = useState('');
 	const [correctLoc, setCorrectLoc] = useState(false);
 	const [newPOI, setNewPOI] = useState(null);
+	const [modalVisible, setModalVisible] = useState(false);
+	const [isSaving, setIsSaving] = useState(false);
+
+	const clearStates = () => {
+		setNewTitle('');
+		setNewDesc('');
+		setNewHashtags('');
+		setNewLat('');
+		setNewLng('');
+		setNewState('');
+		setNewCity('');
+		setNewZip('');
+		setCorrectLoc(false);
+		setNewPOI(null);
+		setIsSaving(false);
+	};
 
 	// To reference the new Marker that is placed after clicking 'continue' in the Modal
 	// Need this so we can have the Callout box be shown automatically the new Marker is placed in the useEffect()
 	let newMarkerRef = useRef(null);
 
-	// Parse Geocoder's returned information for City, State, Zipcode
-	// If they exist, we can set the new information useStates.
-	// Set the correctLoc useState to true or false, and open up the Modal
+	/* Parse Geocoder's returned information for City, State, Zipcode
+	   If they exist, we can set the new information useStates.
+	   Set the correctLoc useState to true or false, and open up the Modal */
 	const getStateCityZip = (addressComps) => {
 		let city = '';
 		let state = '';
@@ -85,51 +96,20 @@ export default MapPage = ({ route, navigation }) => {
 
 	// When the user longpresses on the MapView, currently the beginning part of creating a new POI
 	function onLongPress(e) {
-		let coordinate = {
-			latitude: e.nativeEvent.coordinate.latitude,
-			longitude: e.nativeEvent.coordinate.longitude,
-			latitudeDelta: 0.01,
-			longitudeDelta: 0.01,
-		};
+		if (!newPOI) {
+			setNewLat(e.nativeEvent.coordinate.latitude);
+			setNewLng(e.nativeEvent.coordinate.longitude);
 
-		setNewLat(e.nativeEvent.coordinate.latitude);
-		setNewLng(e.nativeEvent.coordinate.longitude);
-
-		Geocoder.from(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude).then((json) => {
-			try {
-				const addressResult = json.results[0].address_components;
-				getStateCityZip(addressResult);
-				//setAddress(addressComponent);
-				console.log(addressResult);
-				//addressResult.forEach(getStateCityZip);
-				//setNewCity(addressResult.address_components[2].long_name);
-				//setNewState(json.results[0].address_components[4].long_name);
-				//setNewZip(json.results[0].address_components[6].long_name);
-			} catch (error) {
-				console.log(json.results[0].address_components);
-				console.warn(error);
-			}
-		});
-
-		{
-			/*
-			setMarker([
-			...marker,
-			<Marker
-				draggable={true}
-				key={counter}
-				anchor={{ point: (0, 3) }}
-				coordinate={coordinate}
-				image={require('./images/WCImark84.png')}
-				title={'Point Of Interest'}
-				description={address}
-				onPress={(e) => {
-					onPoiPress(e);
-				}}
-			></Marker>,
-		]);
-	setCounter((counter) => counter + 1);
-		*/
+			Geocoder.from(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude).then((json) => {
+				try {
+					const addressResult = json.results[0].address_components;
+					getStateCityZip(addressResult);
+					console.log(addressResult);
+				} catch (error) {
+					console.log(json.results[0].address_components);
+					console.warn(error);
+				}
+			});
 		}
 	}
 
@@ -143,62 +123,30 @@ export default MapPage = ({ route, navigation }) => {
 			zipcode: parseInt(newZip),
 			title: newTitle,
 			description: newDesc,
-			hashtags: newHashtags.split(' '),
+			hashtags: newHashtags.replaceAll('#', '').split(' '),
 		};
 		setNewPOI(POI);
 		setModalVisible(false);
 	};
 
-	{
-		/*function onPoiPress(e) {
-		setModalVisible(true);
-	}*/
-	}
-
-	// Function to be called when clicking on the Callout box of the new Marker when creating a POI
 	function sendPOI() {
-		{
-			/*
-			const POI = {
-			latitude: newLat,
-			longitude: newLng,
-			state: newState,
-			city: newCity,
-			zipcode: parseInt(newZip),
-			title: newTitle,
-			description: newDesc,
-			hashtags: newHashtags,
-		};
-		*/
-		}
+		setIsSaving(true);
 
 		axios
 			.post('https://wherecanibackend-zpqo.onrender.com/poi', newPOI)
 			.then(function (response) {
-				setPOIS(POIS.append(newPOI));
+				setPOIS([...POIS, newPOI]);
 				console.log(response);
+				clearStates();
 			})
 			.catch(function (error) {
 				console.warn(error);
 			});
-		setModalVisible(!modalVisible);
 	}
-
-	// Generate a proper coordinate from POI data for use in a <Marker/>
-	// *** Can probably remove this, it's now in the custom-marker component
-	const generatePOICoordinate = (POI) => {
-		const coordinate = {
-			latitude: parseFloat(POI.latitude),
-			longitude: parseFloat(POI.longitude),
-			latitudeDelta: 0.01,
-			longitudeDelta: 0.01,
-		};
-		return coordinate;
-	};
 
 	useEffect(() => {
 		newMarkerRef.current?.showCallout(); // When the new Marker is placed, we want to have the callout box be shown
-	}, [newMarkerRef, newPOI]);
+	}, [newPOI]);
 
 	return (
 		<SafeAreaView style={styles.safeAreaView}>
@@ -240,7 +188,7 @@ export default MapPage = ({ route, navigation }) => {
 						visible={modalVisible}
 						onRequestClose={() => {
 							Alert.alert('Modal has been closed.');
-							setModalVisible(!modalVisible);
+							setModalVisible(false);
 						}}
 					>
 						<View style={styles.centeredView}>
@@ -278,7 +226,7 @@ export default MapPage = ({ route, navigation }) => {
 										</Pressable>
 										<Pressable
 											style={[styles.button, styles.buttonClose]}
-											onPress={() => setModalVisible(!modalVisible)}
+											onPress={() => setModalVisible(false)}
 										>
 											<Text style={styles.textStyle}>Cancel</Text>
 										</Pressable>
@@ -288,7 +236,7 @@ export default MapPage = ({ route, navigation }) => {
 										<Text style={styles.modalText}>Cannot Place POI Here</Text>
 										<Pressable
 											style={[styles.button, styles.buttonClose]}
-											onPress={() => setModalVisible(!modalVisible)}
+											onPress={() => setModalVisible(false)}
 										>
 											<Text style={styles.textStyle}>OK</Text>
 										</Pressable>
@@ -298,6 +246,38 @@ export default MapPage = ({ route, navigation }) => {
 						</View>
 					</Modal>
 				</View>
+
+				{newPOI ? (
+					<View
+						flexDirection='row'
+						style={{ width: '80%', justifyContent: 'space-between', paddingBottom: 25 }}
+					>
+						<Button
+							size='lg'
+							buttonStyle={{ backgroundColor: '#8F00FF', borderWidth: 1.5, borderColor: '#000000' }}
+							disabledStyle={{ backgroundColor: '#310041' }}
+							containerStyle={{ width: 150 }}
+							loading={isSaving}
+							disabled={isSaving}
+							onPress={() => sendPOI()}
+						>
+							Save POI
+						</Button>
+						<Button
+							size='lg'
+							buttonStyle={{ backgroundColor: '#D49DFF', borderWidth: 1.5, borderColor: '#000000' }}
+							disabledStyle={{ backgroundColor: '#310041' }}
+							containerStyle={{ width: 150 }}
+							loading={isSaving}
+							disabled={isSaving}
+							onPress={() => clearStates()}
+						>
+							Cancel
+						</Button>
+					</View>
+				) : (
+					<></>
+				)}
 
 				<Image
 					source={require('./images/WCIlogo.png')}
