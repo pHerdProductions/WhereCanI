@@ -3,7 +3,7 @@ const prisma = require('../db/prisma');
 module.exports = {
 	createPOI: async (req, res) => {
 		try {
-			let newPoi = req.body;
+			const newPoi = req.body;
 			await prisma.poi.create({
 				data: newPoi,
 			});
@@ -25,27 +25,26 @@ module.exports = {
 	},
 
 	searchPOI: async (req, res) => {
-		console.log(req.body);
-		let stateName = req.body.state;
-		let cityName = req.body.city;
+		console.log('DATA: ');
+		console.log(req.query);
+		let state = req.query.state;
+		let city = req.query.city;
 		let zipcode = parseInt(req.query.zipcode);
 		let hashtags = req.query.hashtags;
-		let arrHashtags = [];
-		if (hashtags) {
-			arrHashtags = hashtags.split(' ');
-		}
 		try {
 			const result = await prisma.poi.findMany({
 				where: {
 					AND: [
-						{ state: stateName },
-						{ city: cityName },
-						{ zipcode: zipcode },
-						{
-							hashtags: {
-								hasSome: arrHashtags,
-							},
-						},
+						{ state: state },
+						city ? { city: city } : {},
+						zipcode ? { zipcode: zipcode } : {},
+						hashtags != ['']
+							? {
+									hashtags: {
+										hasSome: hashtags,
+									},
+							  }
+							: {},
 					],
 				},
 			});
@@ -53,21 +52,9 @@ module.exports = {
 			console.log(result);
 			res.status(200).json({ message: 'Success, here is your data: ', data: result });
 		} catch (error) {
-			res.status(400).json({ message: 'Error: ', error: error });
-		}
-	},
-
-	getIndividualPOI: async (req, res) => {
-		try {
-			const user = await prisma.poi.findUnique({
-				where: {
-					username: req.body.id,
-				},
-			});
-
-			res.status(401).json({ message: 'invalid password or userid', Error: error });
-		} catch (error) {
-			res.status(400).json({ message: 'invalide request', Error: error });
+			console.log('ERROR: ');
+			console.log(error);
+			res.status(400).json({ message: 'Error searching POIs: ', error: error });
 		}
 	},
 };
