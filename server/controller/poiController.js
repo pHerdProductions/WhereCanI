@@ -25,7 +25,7 @@ module.exports = {
 	},
 
 	searchPOI: async (req, res) => {
-		let data = req.params;
+		let data = req.query;
 		console.log('DATA: ');
 		console.log(data);
 		/*const stateName = req.body.state;
