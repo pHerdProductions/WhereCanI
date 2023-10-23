@@ -38,7 +38,7 @@ module.exports = {
 						{ state: state },
 						city ? { city: city } : {},
 						zipcode ? { zipcode: zipcode } : {},
-						hashtags != []
+						hashtags != ['']
 							? {
 									hashtags: {
 										hasSome: hashtags,
