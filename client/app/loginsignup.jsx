@@ -2,8 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ThemeProvider, createTheme, Button, ButtonGroup, withTheme, Text, Icon, Input, InputProps } from '@rneui/themed';
-import { Dropdown } from 'react-native-element-dropdown';
-import { View, ScrollView, StyleSheet, useColorScheme, Keyboard, TouchableHighlight } from 'react-native';
+import { View, ScrollView, StyleSheet, useColorScheme, Keyboard, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
 import { cacheImages } from './helpers/AssetsCaching';
@@ -64,6 +63,7 @@ export default LoginPage = ({ navigation }) => {
 
 	useEffect(() => {
 		loadAssetsAsync();
+	
 	}, []);
 
 	const loadAssetsAsync = async () => {
@@ -117,12 +117,12 @@ export default LoginPage = ({ navigation }) => {
 		return;
 	};
 
+
 	return (
 		<SafeAreaProvider onLayout={onLayoutRootView}>
 			<ThemeProvider theme={theme}>
 				<View style={{ width: '100%', height: '100%', backgroundColor: '#17001F' }}>
 					<Text h1>Where Can I...</Text>
-
 					<ButtonGroup
 						disabled={isLoading}
 						buttons={['SignUp', 'Login']}
