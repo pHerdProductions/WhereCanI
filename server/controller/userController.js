@@ -1,4 +1,4 @@
-const prisma = require('../db/prisma');
+const prisma = require('../db/prisma').default;
 const { hashPassword, comparePassword } = require('../util/hashPassword');
 
 module.exports = {
