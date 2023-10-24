@@ -100,8 +100,7 @@ export default SearchPage = ({ navigation, route }) => {
 				browseAddress(response.data.data);
 			})
 			.catch(function (error) {
-				console.log(error);
-				loginErrorAlert();
+				console.warn(error);
 			});
 	};
 
@@ -116,7 +115,6 @@ export default SearchPage = ({ navigation, route }) => {
 			setDisplaysetting('none');
 		}
 	}
-	const loginErrorAlert = () => Alert.alert('Invalid Search', 'You have entered incorrect Search Terms, Please Try Again', [{ text: 'OK', onPress: () => console.log('OK Pressed') }]);
 
 	return (
 		<SafeAreaProvider>
