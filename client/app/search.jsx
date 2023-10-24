@@ -1,5 +1,4 @@
 // The Search page, comes after Login / Signup page
-
 import React, { useState, useRef, useEffect } from 'react';
 import { ThemeProvider, createTheme, Button, ButtonGroup, withTheme, Text, Icon, Input, InputProps } from '@rneui/themed';
 import { View, Keyboard, TouchableOpacity, Image } from 'react-native';
@@ -101,7 +100,8 @@ export default SearchPage = ({ navigation, route }) => {
 				browseAddress(response.data.data);
 			})
 			.catch(function (error) {
-				console.warn(error);
+				console.log(error);
+				loginErrorAlert();
 			});
 	};
 
@@ -116,6 +116,7 @@ export default SearchPage = ({ navigation, route }) => {
 			setDisplaysetting('none');
 		}
 	}
+	const loginErrorAlert = () => Alert.alert('Invalid Search', 'You have entered incorrect Search Terms, Please Try Again', [{ text: 'OK', onPress: () => console.log('OK Pressed') }]);
 
 	return (
 		<SafeAreaProvider>
@@ -153,7 +154,10 @@ export default SearchPage = ({ navigation, route }) => {
 								<Icon name='face' /> {display}
 							</Text>
 							<Text style={{ color: 'white', fontWeight: 'bold' }}>
-								<Icon name='person' style={{paddingTop:-5}} />
+								<Icon
+									name='person'
+									style={{ paddingTop: -5 }}
+								/>
 								{username}
 							</Text>
 							<Text style={{ color: 'white', fontWeight: 'bold' }}>
