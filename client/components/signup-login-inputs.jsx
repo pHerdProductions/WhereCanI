@@ -99,6 +99,7 @@ const ConfirmPasswordInput = React.forwardRef((props, ref) => {
 			iconType='simple-line-icon'
 			placeholder='Confirm Password'
 			secureTextEntry={true}
+			
 		/>
 	);
 });

@@ -1,8 +1,7 @@
 // The Search page, comes after Login / Signup page
-
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ThemeProvider, createTheme, Button, ButtonGroup, withTheme, Text, Icon, Input, InputProps } from '@rneui/themed';
-import { View, ScrollView, StyleSheet, useColorScheme, Keyboard, Alert } from 'react-native';
+import { View, ScrollView, StyleSheet, useColorScheme, Keyboard, Alert,TouchableOpacity, Image } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { USStates } from '../data/states';
 import * as Search from '../components/search-inputs';
@@ -11,6 +10,11 @@ import { GOOGLE_API } from '@env';
 import axios from 'axios';
 
 Geocoder.init(GOOGLE_API);
+
+//having an issues initializing on my iphone, so i added this useeffect to initialize it on pageload
+// useEffect(() => {
+// 	Geocoder.init(GOOGLE_API);
+// }, []);
 
 const states = USStates;
 
@@ -37,6 +41,7 @@ export default SearchPage = ({ navigation, route }) => {
 	const [cityName, setCityName] = useState('');
 	const [zipcode, setZipcode] = useState('');
 	const [hashtags, setHashtags] = useState('');
+	const [displaysetting, setDisplaysetting] = useState('none'); //display user info
 
 	let stateInput = useRef(null);
 	let cityInput = useRef(null);
@@ -44,6 +49,9 @@ export default SearchPage = ({ navigation, route }) => {
 	let hashtagsInput = useRef(null);
 
 	const [isSearching, setIsSearching] = useState(false);
+
+	const { email, username, state, display } = route.params;
+	let buttonDisplayName = display.charAt(0) + username.charAt(0);
 
 	/* Handle Geocoder from an address to load the map from the input location and 
      navigate to map page with all POIs from the DB */
@@ -115,14 +123,71 @@ export default SearchPage = ({ navigation, route }) => {
 		}
 	};
 
+	useEffect(() => {
+		displaysetting;
+	}, []);
+
+	function userDisplay() {
+		if (displaysetting == 'none') {
+			setDisplaysetting('block');
+		} else {
+			setDisplaysetting('none');
+		}
+	}
+
 	return (
 		<SafeAreaProvider>
 			<ThemeProvider theme={theme}>
 				<View style={{ width: '100%', height: '100%', backgroundColor: '#17001F' }}>
 					{/*<Text>User: {JSON.stringify(display)}</Text>*/}
 
-					<Text h1>Where Can I...</Text>
+					<View style={{ display: 'flex', flexDirection: 'row-reverse', justifyContent: 'space-between' }}>
+						<TouchableOpacity
+							onPress={() => {
+								userDisplay();
+							}}
+							style={{
+								borderRadius: 100,
+								padding: 20,
+								margin: 5,
+								backgroundColor: '#8F00FF',
+								borderColor: '#D49DFF',
+								borderWidth: 1.5,
+								width: 60,
+								height: 60,
+							}}
+						>
+							<Text>{buttonDisplayName}</Text>
+						</TouchableOpacity>
 
+						<View style={{ display: displaysetting, backgroundColor: '17001F', borderBottomWidth: 20 }}>
+							<Image
+								style={{ width: 55, height: 55 }}
+								source={{
+									uri: 'https://cdn-icons-png.flaticon.com/128/3135/3135715.png',
+								}}
+							/>
+							<Text style={{ color: 'white', fontWeight: 'bold' }}>
+								<Icon name='face' /> {display}
+							</Text>
+							<Text style={{ color: 'white', fontWeight: 'bold' }}>
+								<Icon
+									name='person'
+									style={{ paddingTop: -5 }}
+								/>
+								{username}
+							</Text>
+							<Text style={{ color: 'white', fontWeight: 'bold' }}>
+								<Icon name='mail' />
+								{email}
+							</Text>
+							<Text style={{ color: 'white', fontWeight: 'bold' }}>
+								<Icon name='place' />
+								{state}
+							</Text>
+						</View>
+					</View>
+					<Text h1>Where Can I...</Text>
 					<Search.StateDropDown
 						ref={(input) => (stateInput = input)}
 						disabled={isSearching}
@@ -138,7 +203,6 @@ export default SearchPage = ({ navigation, route }) => {
 						}}
 						onSubmitEditing={() => cityInput.focus()}
 					/>
-
 					<Search.CityInput
 						ref={(input) => (cityInput = input)}
 						disabled={isSearching}
@@ -146,14 +210,12 @@ export default SearchPage = ({ navigation, route }) => {
 						onChangeText={(text) => setCityName(text)}
 						onSubmitEditing={() => zipcodeInput.focus()}
 					/>
-
 					<Search.ZipInput
 						ref={(input) => (zipcodeInput = input)}
 						disabled={isSearching}
 						value={zipcode}
 						onChangeText={(text) => setZipcode(text)}
 					/>
-
 					<Button
 						title='Browse Area'
 						type='outline'
@@ -164,14 +226,12 @@ export default SearchPage = ({ navigation, route }) => {
 						loadingProps={{ color: '#FFFFFF', size: 31.5 }}
 						disabled={isSearching}
 					/>
-
 					<Search.HashtagsInput
 						ref={(input) => (hashtagsInput = input)}
 						disabled={isSearching}
 						value={hashtags}
 						onChangeText={(text) => setHashtags(text)}
 					/>
-
 					<Button
 						title='Search By Hashtags'
 						type='outline'
@@ -190,6 +250,12 @@ export default SearchPage = ({ navigation, route }) => {
 
 // Create seperate file for our theme?
 const theme = createTheme({
+	dropDownContainer: {
+		position: 'relative',
+		display: 'flex',
+		alignItems: 'center',
+	},
+	dropDownContent: {},
 	lightColors: {
 		primary: '#3d5afe',
 	},
