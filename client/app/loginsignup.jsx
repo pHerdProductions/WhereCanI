@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 import { ThemeProvider, createTheme, Button, ButtonGroup, withTheme, Text, Icon, Input, InputProps } from '@rneui/themed';
-import { View, ScrollView, StyleSheet, useColorScheme, Keyboard, TouchableHighlight , Alert, KeyboardAvoidingView, Platform,} from 'react-native';
+import { View, ScrollView, StyleSheet, useColorScheme, Keyboard, TouchableHighlight, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
 import { cacheImages } from './helpers/AssetsCaching';
@@ -123,7 +123,10 @@ export default LoginPage = ({ navigation }) => {
 	const singupErrorAlert = () => Alert.alert('Invalid SignUp', 'You have entered a Username or Email that already exist, Please Try Again', [{ text: 'OK', onPress: () => console.log('OK Pressed') }]);
 
 	return (
-		<SafeAreaProvider style={{ flex: 1, backgroundColor:"black" }} onLayout={onLayoutRootView}>
+		<SafeAreaProvider
+			style={{ flex: 1, backgroundColor: '#17001F' }}
+			onLayout={onLayoutRootView}
+		>
 			<KeyboardAvoidingView
 				behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 				keyboardVerticalOffset={100}
