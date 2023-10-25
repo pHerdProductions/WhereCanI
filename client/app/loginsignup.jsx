@@ -1,8 +1,9 @@
 // The initial start page: Signup & Login
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { ThemeProvider, createTheme, Button, ButtonGroup, Text } from '@rneui/themed';
-import { View, useColorScheme, Keyboard, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+
+import { ThemeProvider, createTheme, Button, ButtonGroup, withTheme, Text, Icon, Input, InputProps } from '@rneui/themed';
+import { View, ScrollView, StyleSheet, useColorScheme, Keyboard, TouchableHighlight , Alert, KeyboardAvoidingView, Platform,} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
 import { cacheImages } from './helpers/AssetsCaching';
@@ -87,7 +88,7 @@ export default LoginPage = ({ navigation }) => {
 			let signup = { email: email, username: userName, password: password, display: displayName, state: stateName };
 
 			axios
-				.post('https://wherecanibackend-zpqo.onrender.com/signup', signup)
+				.post('https://wherecanibackend-zpqo.onrender.com/user', signup)
 				.then(function (response) {
 					navigation.navigate('search', response.data.data);
 				})
@@ -102,7 +103,7 @@ export default LoginPage = ({ navigation }) => {
 			let login = { username: userName, password: password };
 
 			axios
-				.post('https://wherecanibackend-zpqo.onrender.com/login', login)
+				.post('https://wherecanibackend-zpqo.onrender.com/user/login', login)
 				.then(function (response) {
 					navigation.navigate('search', response.data.data);
 				})

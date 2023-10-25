@@ -1,7 +1,7 @@
 // The Search page, comes after Login / Signup page
 import React, { useState, useRef, useEffect } from 'react';
 import { ThemeProvider, createTheme, Button, ButtonGroup, withTheme, Text, Icon, Input, InputProps } from '@rneui/themed';
-import { View, Keyboard, TouchableOpacity, Image } from 'react-native';
+import { View, ScrollView, StyleSheet, useColorScheme, Keyboard, Alert,TouchableOpacity, Image } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { USStates } from '../data/states';
 import * as Search from '../components/search-inputs';
@@ -34,8 +34,10 @@ const generateAddress = (stateName, cityName, zipcode) => {
 };
 
 export default SearchPage = ({ navigation, route }) => {
+	const { display, username, state } = route.params;
+
 	const [dropFocus, setDropFocus] = useState(false); // Is the dropdnown in focus or not
-	const [stateName, setStateName] = useState('');
+	const [stateName, setStateName] = useState(state);
 	const [cityName, setCityName] = useState('');
 	const [zipcode, setZipcode] = useState('');
 	const [hashtags, setHashtags] = useState('');
@@ -75,13 +77,14 @@ export default SearchPage = ({ navigation, route }) => {
 		Keyboard.dismiss();
 		setIsSearching(true);
 		axios
-			.get(`https://wherecanibackend-zpqo.onrender.com/poi`)
+			.get('https://wherecanibackend-zpqo.onrender.com/poi')
 			.then(function (response) {
 				console.log('POIs:');
 				console.log(response.data.data);
 				browseAddress(response.data.data);
 			})
 			.catch(function (error) {
+				setIsSearching(false);
 				console.warn(error);
 			});
 	};
@@ -90,18 +93,34 @@ export default SearchPage = ({ navigation, route }) => {
      so the only field that is required is the State */
 	const searchPOIs = () => {
 		Keyboard.dismiss();
-		setIsSearching(true);
-		let hashtagsStr = hashtags.replace('#', ' ');
-		axios
-			.get(`https://wherecanibackend-zpqo.onrender.com/poi/search?state=${stateName}&city=${cityName}&zipcode=${zipcode}&hashtags=${hashtagsStr}`)
-			.then(function (response) {
-				console.log('POIs:');
-				console.log(response.data.data);
-				browseAddress(response.data.data);
-			})
-			.catch(function (error) {
-				console.warn(error);
-			});
+		if (hashtags == '') {
+			hashtagsInput.shake();
+		} else {
+			setIsSearching(true);
+			let hashtagsArr = hashtags.replaceAll('#', '').split(' ');
+			let search = { state: stateName, city: cityName, zipcode: zipcode, hashtags: hashtagsArr };
+			axios
+				.get('https://wherecanibackend-zpqo.onrender.com/poi/search', { params: search })
+				.then(function (response) {
+					let foundPOIs = response.data.data;
+					console.log('POIs:');
+					console.log(foundPOIs);
+					if (foundPOIs.length == 0) {
+						Alert.alert('No POIs found.', 'Try another area or other hashtags.', [
+							{
+								text: 'Ok',
+							},
+						]);
+						setIsSearching(false);
+					} else {
+						browseAddress(foundPOIs);
+					}
+				})
+				.catch(function (error) {
+					setIsSearching(false);
+					console.warn(error);
+				});
+		}
 	};
 
 	useEffect(() => {
@@ -198,10 +217,10 @@ export default SearchPage = ({ navigation, route }) => {
 						onChangeText={(text) => setZipcode(text)}
 					/>
 					<Button
-						title='Browse'
+						title='Browse Area'
 						type='outline'
 						raised
-						containerStyle={{ marginHorizontal: 100, marginVertical: 40 }}
+						containerStyle={{ marginHorizontal: 50, marginVertical: 25 }}
 						onPress={() => browseAllPOIs()}
 						loading={isSearching}
 						loadingProps={{ color: '#FFFFFF', size: 31.5 }}
@@ -214,10 +233,10 @@ export default SearchPage = ({ navigation, route }) => {
 						onChangeText={(text) => setHashtags(text)}
 					/>
 					<Button
-						title='Search'
+						title='Search By Hashtags'
 						type='outline'
 						raised
-						containerStyle={{ marginHorizontal: 100, marginVertical: 40 }}
+						containerStyle={{ marginHorizontal: 50, marginVertical: 25 }}
 						onPress={() => searchPOIs()}
 						loading={isSearching}
 						loadingProps={{ color: '#FFFFFF', size: 31.5 }}
