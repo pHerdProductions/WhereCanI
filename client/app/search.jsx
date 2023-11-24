@@ -34,22 +34,23 @@ const generateAddress = (stateName, cityName, zipcode) => {
 };
 
 export default SearchPage = ({ navigation, route }) => {
+	const { email, username, state, display } = route.params;
+
 	const [dropFocus, setDropFocus] = useState(false); // Is the dropdnown in focus or not
 	const [stateName, setStateName] = useState(state);
 	const [cityName, setCityName] = useState('');
 	const [zipcode, setZipcode] = useState('');
 	const [hashtags, setHashtags] = useState('');
+
+	const [isSearching, setIsSearching] = useState(false);
+
 	const [displaysetting, setDisplaysetting] = useState('none'); //display user info
+	let buttonDisplayName = display.charAt(0) + username.charAt(0);
 
 	let stateInput = useRef(null);
 	let cityInput = useRef(null);
 	let zipcodeInput = useRef(null);
 	let hashtagsInput = useRef(null);
-
-	const [isSearching, setIsSearching] = useState(false);
-
-	const { email, username, state, display } = route.params;
-	let buttonDisplayName = display.charAt(0) + username.charAt(0);
 
 	/* Handle Geocoder from an address to load the map from the input location and 
      navigate to map page with all POIs from the DB */
@@ -134,14 +135,14 @@ export default SearchPage = ({ navigation, route }) => {
 	}
 
 	return (
-				<SafeAreaProvider style={{ flex: 1, backgroundColor: '#17001F' }}>
-		<KeyboardAvoidingView
-			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-			keyboardVerticalOffset={100}
-			style={{ flex: 1 }}
-			enabled
-		>
-			<ScrollView>
+		<SafeAreaProvider style={{ flex: 1, backgroundColor: '#17001F' }}>
+			<KeyboardAvoidingView
+				behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+				keyboardVerticalOffset={100}
+				style={{ flex: 1 }}
+				enabled
+			>
+				<ScrollView>
 					<ThemeProvider theme={theme}>
 						<View style={{ width: '100%', height: '100%', backgroundColor: '#17001F' }}>
 							{/*<Text>User: {JSON.stringify(display)}</Text>*/}
@@ -247,9 +248,9 @@ export default SearchPage = ({ navigation, route }) => {
 							/>
 						</View>
 					</ThemeProvider>
-			</ScrollView>
-		</KeyboardAvoidingView>
-				</SafeAreaProvider>
+				</ScrollView>
+			</KeyboardAvoidingView>
+		</SafeAreaProvider>
 	);
 };
 
