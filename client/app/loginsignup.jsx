@@ -90,7 +90,7 @@ export default LoginPage = ({ navigation }) => {
 			axios
 				.post('https://wherecanibackend-zpqo.onrender.com/user', signup)
 				.then(function (response) {
-					navigation.navigate('search', response.data.data);
+					navigation.replace('search', response.data.data);
 				})
 				.finally(() => {
 					setIsLoading(false);
@@ -105,7 +105,7 @@ export default LoginPage = ({ navigation }) => {
 			axios
 				.post('https://wherecanibackend-zpqo.onrender.com/user/login', login)
 				.then(function (response) {
-					navigation.navigate('search', response.data.data);
+					navigation.replace('search', response.data.data);
 				})
 				.finally(() => {
 					setIsLoading(false);
