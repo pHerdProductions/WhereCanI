@@ -18,29 +18,40 @@ model User {
   display   String
   state     String
   username  String   @unique @db.VarChar(20)
-  post      Post[]
+  posts     Post[]
+  ratings   Rating[]
 }
 
 model Poi {
-  id          String   @id @default(uuid())
-  latitude    Decimal  @db.Decimal(21, 18)
-  longitude   Decimal  @db.Decimal(21, 18)
+  id          String    @id @default(uuid())
+  latitude    Decimal   @db.Decimal(21, 18)
+  longitude   Decimal   @db.Decimal(21, 18)
   state       String
   city        String
   zipcode     Int
-  title       String   @db.VarChar(100)
-  description String   @db.VarChar(300)
-  hashtags    String[] @db.VarChar(30)
-  createdAt   DateTime @default(now())
-  post        Post[]
+  title       String    @db.VarChar(100)
+  description String    @db.VarChar(300)
+  hashtags    String[]  @db.VarChar(30)
+  createdAt   DateTime  @default(now())
+  posts       Post[]
+  ratings     Rating[]
+  ratingAvg   Decimal   @db.Decimal(2, 1)
 }
 
 model Post {
   id       String  @id @default(uuid())
   comment  String  @db.VarChar(200)
   authorId String
-  ratings  Decimal @db.Decimal(2, 1)
   poiId    String
   author   User    @relation(fields: [authorId], references: [id])
   poi      Poi     @relation(fields: [poiId], references: [id])
+}
+
+model Rating {
+  id        String  @id @default(uuid())
+  rating    Decimal @db.Decimal(2, 1)
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  poiId     String
+  poi       Poi     @relation(fields: [poiId], references: [id])
 }
