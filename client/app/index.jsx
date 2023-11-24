@@ -11,11 +11,10 @@ const Stack = createNativeStackNavigator();
 export default function App() {
 	return (
 		<NavigationContainer independent={true}>
-			<Stack.Navigator>
+			<Stack.Navigator screenOptions={{ headerShown: false }}>
 				<Stack.Screen
 					name='login'
 					component={LoginPage}
-					options={{ title: 'Welcome' }}
 				/>
 				<Stack.Screen
 					name='search'
