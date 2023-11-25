@@ -150,7 +150,8 @@ export default SearchPage = ({ navigation, route }) => {
 							<View style={{ display: 'flex', flexDirection: 'row-reverse', justifyContent: 'space-between' }}>
 								<TouchableOpacity
 									onPress={() => {
-										userDisplay();
+										//userDisplay();
+										navigation.navigate('profile', { email, username, state, display });
 									}}
 									style={{
 										borderRadius: 100,
