@@ -151,7 +151,7 @@ export default LoginPage = ({ navigation }) => {
 							{selectedIndex == 0 && (
 								<SignupLogin.StateDropDown
 									ref={(input) => (stateInput = input)}
-									disabled={isLoading}
+									disable={isLoading}
 									style={(dropFocus || stateName != '') && { borderColor: '#FFFFFF' }}
 									data={states}
 									placeholder={!dropFocus ? 'Your State...' : '...'}
