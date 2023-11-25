@@ -99,7 +99,6 @@ const ConfirmPasswordInput = React.forwardRef((props, ref) => {
 			iconType='simple-line-icon'
 			placeholder='Confirm Password'
 			secureTextEntry={true}
-			
 		/>
 	);
 });
@@ -126,11 +125,11 @@ const StateDropDown = React.forwardRef((props, ref) => {
 		<View style={[dropStyle.container]}>
 			<Dropdown
 				ref={ref}
-				disabled={props.disabled}
+				disable={props.disable}
 				style={[dropStyle.dropdown, props.style]}
-				placeholderStyle={dropStyle.placeholderStyle}
-				selectedTextStyle={dropStyle.selectedTextStyle}
-				inputSearchStyle={dropStyle.inputSearchStyle}
+				placeholderStyle={[dropStyle.placeholderStyle, props.placeholderStyle]}
+				selectedTextStyle={[dropStyle.selectedTextStyle, props.selectedTextStyle]}
+				inputSearchStyle={[dropStyle.inputSearchStyle, props.inputSearchStyle]}
 				data={props.data}
 				search
 				maxHeight={280}
