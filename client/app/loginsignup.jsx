@@ -10,6 +10,7 @@ import { cacheImages } from './helpers/AssetsCaching';
 import * as SignupLogin from '../components/signup-login-inputs';
 import { USStates } from '../data/states';
 import axios from 'axios';
+import { DB_URL } from '@env';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -88,7 +89,7 @@ export default LoginPage = ({ navigation }) => {
 			let signup = { email: email, username: userName, password: password, display: displayName, state: stateName };
 
 			axios
-				.post('https://wherecanibackend-zpqo.onrender.com/user', signup)
+				.post(`${DB_URL}/user`, signup)
 				.then(function (response) {
 					navigation.replace('search', response.data.data);
 				})
@@ -103,7 +104,7 @@ export default LoginPage = ({ navigation }) => {
 			let login = { username: userName, password: password };
 
 			axios
-				.post('https://wherecanibackend-zpqo.onrender.com/user/login', login)
+				.post(`${DB_URL}/user/login`, login)
 				.then(function (response) {
 					navigation.replace('search', response.data.data);
 				})
