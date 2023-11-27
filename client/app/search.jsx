@@ -6,7 +6,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { USStates } from '../data/states';
 import * as Search from '../components/search-inputs';
 import Geocoder from 'react-native-geocoding';
-import { GOOGLE_API } from '@env';
+import { GOOGLE_API, DB_URL } from '@env';
 import axios from 'axios';
 
 Geocoder.init(GOOGLE_API);
@@ -34,7 +34,7 @@ const generateAddress = (stateName, cityName, zipcode) => {
 };
 
 export default SearchPage = ({ navigation, route }) => {
-	const { email, username, state, display } = route.params;
+	const { email, username, state, display, id } = route.params;
 
 	const [dropFocus, setDropFocus] = useState(false); // Is the dropdnown in focus or not
 	const [stateName, setStateName] = useState(state);
@@ -76,7 +76,7 @@ export default SearchPage = ({ navigation, route }) => {
 		Keyboard.dismiss();
 		setIsSearching(true);
 		axios
-			.get('https://wherecanibackend-zpqo.onrender.com/poi')
+			.get(`${DB_URL}/poi`)
 			.then(function (response) {
 				console.log('POIs:');
 				console.log(response.data.data);
@@ -99,7 +99,7 @@ export default SearchPage = ({ navigation, route }) => {
 			let hashtagsArr = hashtags.replaceAll('#', '').split(' ');
 			let search = { state: stateName, city: cityName, zipcode: zipcode, hashtags: hashtagsArr };
 			axios
-				.get('https://wherecanibackend-zpqo.onrender.com/poi/search', { params: search })
+				.get(`${DB_URL}/poi/search`, { params: search })
 				.then(function (response) {
 					let foundPOIs = response.data.data;
 					console.log('POIs:');
@@ -123,8 +123,9 @@ export default SearchPage = ({ navigation, route }) => {
 	};
 
 	useEffect(() => {
-		displaysetting;
-	}, []);
+		//displaysetting;
+		console.log(route.params);
+	});
 
 	function userDisplay() {
 		if (displaysetting == 'none') {
@@ -151,7 +152,7 @@ export default SearchPage = ({ navigation, route }) => {
 								<TouchableOpacity
 									onPress={() => {
 										//userDisplay();
-										navigation.navigate('profile', { email, username, state, display });
+										navigation.navigate('profile', { email, username, state, display, id });
 									}}
 									style={{
 										borderRadius: 100,
