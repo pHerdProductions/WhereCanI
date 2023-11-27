@@ -1,4 +1,4 @@
-// The Search page, comes after Login / Signup page
+// The Profile page, viewing (possibly editing) user info
 import React, { useState, useRef } from 'react';
 import { ThemeProvider, createTheme, Button, Text, Icon } from '@rneui/themed';
 import { View, ScrollView, Keyboard, Alert, TouchableOpacity, Image, KeyboardAvoidingView } from 'react-native';
@@ -11,6 +11,7 @@ const states = USStates;
 
 export default ProfilePage = ({ navigation, route }) => {
 	// Thinking about enabling editing user information
+	const [userId, setUserId] = useState(route.params.id);
 	const [email, setEmail] = useState(route.params.email);
 	const [username, setUsername] = useState(route.params.username);
 	//const [password, setPassword] = useState('');
@@ -39,16 +40,26 @@ export default ProfilePage = ({ navigation, route }) => {
 	};
 
 	return (
-		<SafeAreaProvider style={{ flex: 1, backgroundColor: '#17001F' }}>
-			<KeyboardAvoidingView
-				behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-				keyboardVerticalOffset={100}
-				style={{ flex: 1 }}
-			>
-				<ScrollView>
-					<ThemeProvider theme={theme}>
+		<ThemeProvider theme={theme}>
+			<SafeAreaProvider style={{ flex: 1, backgroundColor: '#17001F' }}>
+				<KeyboardAvoidingView
+					behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+					keyboardVerticalOffset={100}
+					style={{ flex: 1 }}
+				>
+					<ScrollView>
 						<View style={{ width: '100%', height: '100%', backgroundColor: '#17001F' }}>
+							<Button
+								title='Back'
+								type='outline'
+								raised
+								titleStyle={{ fontSize: 15 }}
+								containerStyle={{ marginTop: '5%', marginLeft: '5%', marginRight: '75%' }}
+								onPress={() => navigation.goBack()}
+							/>
+							<Text h2>Display Name</Text>
 							<Text h1>{displayName}</Text>
+							<Text h3>Personal Info</Text>
 							<SignupLogin.StateDropDown
 								ref={(input) => (stateInput = input)}
 								disable={!editState}
@@ -81,13 +92,6 @@ export default ProfilePage = ({ navigation, route }) => {
 								onChangeText={(text) => setEmail(text)}
 							/>
 							<Button
-								title='Back'
-								type='outline'
-								raised
-								containerStyle={{ marginHorizontal: 100, marginTop: 20 }}
-								onPress={() => navigation.goBack()}
-							/>
-							<Button
 								title='Logout'
 								type='outline'
 								raised
@@ -95,10 +99,10 @@ export default ProfilePage = ({ navigation, route }) => {
 								onPress={() => handleLogout()}
 							/>
 						</View>
-					</ThemeProvider>
-				</ScrollView>
-			</KeyboardAvoidingView>
-		</SafeAreaProvider>
+					</ScrollView>
+				</KeyboardAvoidingView>
+			</SafeAreaProvider>
+		</ThemeProvider>
 	);
 };
 
@@ -117,8 +121,21 @@ const theme = createTheme({
 			h1Style: {
 				fontSize: 50,
 				textAlign: 'center',
-				paddingTop: 30,
 				color: '#FFFFFF',
+			},
+			h2Style: {
+				fontSize: 25,
+				textAlign: 'center',
+				color: '#86939E',
+				paddingTop: '5%',
+				paddingBottom: '1%',
+			},
+			h3Style: {
+				fontSize: 25,
+				textAlign: 'center',
+				color: '#86939E',
+				paddingTop: '5%',
+				paddingBottom: '5%',
 			},
 			h4Style: {
 				fontSize: 20,
