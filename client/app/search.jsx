@@ -122,6 +122,7 @@ export default SearchPage = ({ navigation, route }) => {
 		}
 	};
 
+	const ratingProps = {};
 	return (
 		<SafeAreaProvider style={{ flex: 1, backgroundColor: '#17001F' }}>
 			<KeyboardAvoidingView
