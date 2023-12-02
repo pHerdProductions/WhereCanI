@@ -19,7 +19,11 @@ module.exports = {
 
 	getAllUser: async (req, res) => {
 		try {
-			const ret = await prisma.user.findMany();
+			const ret = await prisma.user.findMany({
+				include: {
+					ratings: true,
+				},
+			});
 
 			res.status(200).json({ message: 'here is your data', data: ret });
 		} catch (error) {

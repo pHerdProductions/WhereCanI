@@ -76,7 +76,6 @@ export default SearchPage = ({ navigation, route }) => {
 		setIsSearching(true);
 		axios
 			.get('https://wherecanibackend-zpqo.onrender.com/poi')
-
 			.then(function (response) {
 				console.log('POIs:');
 				console.log(response.data.data);
