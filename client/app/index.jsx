@@ -11,11 +11,13 @@ const Stack = createNativeStackNavigator();
 export default function App() {
 	return (
 		<NavigationContainer independent={true}>
-			<Stack.Navigator>
+			<Stack.Navigator
+				screenOptions={{ headerShown: false }}
+				initialRouteName='login'
+			>
 				<Stack.Screen
 					name='login'
 					component={LoginPage}
-					options={{ title: 'Welcome' }}
 				/>
 				<Stack.Screen
 					name='search'
@@ -24,6 +26,10 @@ export default function App() {
 				<Stack.Screen
 					name='map'
 					component={MapPage}
+				/>
+				<Stack.Screen
+					name='profile'
+					component={ProfilePage}
 				/>
 			</Stack.Navigator>
 		</NavigationContainer>

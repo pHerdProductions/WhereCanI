@@ -6,7 +6,7 @@ import MapView from 'react-native-maps';
 import { CustomMarker } from '../components/custom-marker';
 import Geocoder from 'react-native-geocoding';
 import axios from 'axios';
-import { GOOGLE_API } from '@env';
+import { GOOGLE_API, DB_URL } from '@env';
 
 Geocoder.init(GOOGLE_API);
 
@@ -133,7 +133,7 @@ export default MapPage = ({ route, navigation }) => {
 		setIsSaving(true);
 
 		axios
-			.post('https://wherecanibackend-zpqo.onrender.com/poi', newPOI)
+			.post(`${DB_URL}/poi`, newPOI)
 			.then(function (response) {
 				setPOIS([...POIS, newPOI]);
 				console.log(response);
@@ -279,12 +279,23 @@ export default MapPage = ({ route, navigation }) => {
 					<></>
 				)}
 
+				<Button
+					title='Back'
+					type='outline'
+					raised
+					titleStyle={{ color: '#FFFFFF', fontSize: 20, fontWeight: 'bold' }}
+					buttonStyle={{ backgroundColor: '#8F00FF', borderColor: '#D49DFF}', borderWidth: 1.5 }}
+					containerStyle={{ position: 'absolute', top: 10, left: 10 }}
+					//containerStyle={{ marginTop: '5%', marginLeft: '5%', marginRight: '75%' }}
+					onPress={() => navigation.goBack()}
+				/>
+
 				<Image
 					source={require('./images/WCIlogo.png')}
 					style={{
 						position: 'absolute',
-						top: 0,
-						left: 0,
+						top: 10,
+						right: 10,
 						width: 80,
 						height: 40,
 					}}

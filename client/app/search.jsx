@@ -1,12 +1,12 @@
 // The Search page, comes after Login / Signup page
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { ThemeProvider, createTheme, Button, Text, Icon } from '@rneui/themed';
-import { View, ScrollView, Keyboard, Alert, TouchableOpacity, Image, KeyboardAvoidingView } from 'react-native';
+import { View, ScrollView, Keyboard, Alert, KeyboardAvoidingView } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { USStates } from '../data/states';
 import * as Search from '../components/search-inputs';
 import Geocoder from 'react-native-geocoding';
-import { GOOGLE_API } from '@env';
+import { GOOGLE_API, DB_URL } from '@env';
 import axios from 'axios';
 
 Geocoder.init(GOOGLE_API);
@@ -34,22 +34,23 @@ const generateAddress = (stateName, cityName, zipcode) => {
 };
 
 export default SearchPage = ({ navigation, route }) => {
+	const { email, username, state, display, id } = route.params;
+
 	const [dropFocus, setDropFocus] = useState(false); // Is the dropdnown in focus or not
 	const [stateName, setStateName] = useState(state);
 	const [cityName, setCityName] = useState('');
 	const [zipcode, setZipcode] = useState('');
 	const [hashtags, setHashtags] = useState('');
+
+	const [isSearching, setIsSearching] = useState(false);
+
 	const [displaysetting, setDisplaysetting] = useState('none'); //display user info
+	let buttonDisplayName = display.charAt(0) + username.charAt(0);
 
 	let stateInput = useRef(null);
 	let cityInput = useRef(null);
 	let zipcodeInput = useRef(null);
 	let hashtagsInput = useRef(null);
-
-	const [isSearching, setIsSearching] = useState(false);
-
-	const { email, username, state, display } = route.params;
-	let buttonDisplayName = display.charAt(0) + username.charAt(0);
 
 	/* Handle Geocoder from an address to load the map from the input location and 
      navigate to map page with all POIs from the DB */
@@ -75,7 +76,7 @@ export default SearchPage = ({ navigation, route }) => {
 		Keyboard.dismiss();
 		setIsSearching(true);
 		axios
-			.get('https://wherecanibackend-zpqo.onrender.com/poi')
+			.get(`${DB_URL}/poi`)
 			.then(function (response) {
 				console.log('POIs:');
 				console.log(response.data.data);
@@ -98,7 +99,7 @@ export default SearchPage = ({ navigation, route }) => {
 			let hashtagsArr = hashtags.replaceAll('#', '').split(' ');
 			let search = { state: stateName, city: cityName, zipcode: zipcode, hashtags: hashtagsArr };
 			axios
-				.get('https://wherecanibackend-zpqo.onrender.com/poi/search', { params: search })
+				.get(`${DB_URL}/poi/search`, { params: search })
 				.then(function (response) {
 					let foundPOIs = response.data.data;
 					console.log('POIs:');
@@ -121,18 +122,6 @@ export default SearchPage = ({ navigation, route }) => {
 		}
 	};
 
-	useEffect(() => {
-		displaysetting;
-	}, []);
-
-	function userDisplay() {
-		if (displaysetting == 'none') {
-			setDisplaysetting('block');
-		} else {
-			setDisplaysetting('none');
-		}
-	}
-
 	const ratingProps = {};
 	return (
 		<SafeAreaProvider style={{ flex: 1, backgroundColor: '#17001F' }}>
@@ -145,50 +134,16 @@ export default SearchPage = ({ navigation, route }) => {
 				<ScrollView>
 					<ThemeProvider theme={theme}>
 						<View style={{ width: '100%', height: '100%', backgroundColor: '#17001F' }}>
-							<View style={{ display: 'flex', flexDirection: 'row-reverse', justifyContent: 'space-between' }}>
-								<TouchableOpacity
-									onPress={() => {
-										userDisplay();
-									}}
-									style={{
-										borderRadius: 100,
-										padding: 20,
-										margin: 5,
-										backgroundColor: '#8F00FF',
-										borderColor: '#D49DFF',
-										borderWidth: 1.5,
-										width: 65,
-										height: 65,
-									}}
-								>
-									<Text>{buttonDisplayName}</Text>
-								</TouchableOpacity>
-
-								<View style={{ display: displaysetting, backgroundColor: '17001F', borderBottomWidth: 20 }}>
-									<Image
-										style={{ width: 55, height: 55 }}
-										source={{
-											uri: 'https://cdn-icons-png.flaticon.com/128/3135/3135715.png',
-										}}
-									/>
-									<Text style={{ color: 'white', fontWeight: 'bold' }}>
-										{/* <Icon name='face' /> */}
-										User:{display}
-									</Text>
-									<Text style={{ color: 'white', fontWeight: 'bold' }}>
-										{/* <Icon name='person' /> */}
-										Username:{username}
-									</Text>
-									<Text style={{ color: 'white', fontWeight: 'bold' }}>
-										{/* <Icon name='mail' /> */}
-										Email:{email}
-									</Text>
-									<Text style={{ color: 'white', fontWeight: 'bold' }}>
-										{/* <Icon name='place' /> */}
-										State:{state}
-									</Text>
-								</View>
-							</View>
+							<Button
+								title='Profile'
+								type='outline'
+								raised
+								titleStyle={{ fontSize: 20 }}
+								containerStyle={{ marginTop: '5%', marginLeft: '70%', marginRight: '5%' }}
+								onPress={() => {
+									navigation.navigate('profile', { email, username, state, display, id });
+								}}
+							/>
 							<Text h1>Where Can I...</Text>
 							<Search.StateDropDown
 								ref={(input) => (stateInput = input)}
