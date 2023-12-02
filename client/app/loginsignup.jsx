@@ -10,6 +10,7 @@ import { cacheImages } from './helpers/AssetsCaching';
 import * as SignupLogin from '../components/signup-login-inputs';
 import { USStates } from '../data/states';
 import axios from 'axios';
+import { Rating, RatingProps } from '@rneui/themed';
 
 SplashScreen.preventAutoHideAsync();
 

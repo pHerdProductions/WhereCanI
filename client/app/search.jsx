@@ -76,9 +76,14 @@ export default SearchPage = ({ navigation, route }) => {
 		setIsSearching(true);
 		axios
 			.get('https://wherecanibackend-zpqo.onrender.com/poi')
+
 			.then(function (response) {
 				console.log('POIs:');
 				console.log(response.data.data);
+				console.log('=============');
+
+				console.log(response);
+
 				browseAddress(response.data.data);
 			})
 			.catch(function (error) {
@@ -133,19 +138,18 @@ export default SearchPage = ({ navigation, route }) => {
 		}
 	}
 
+	const ratingProps = {};
 	return (
-				<SafeAreaProvider style={{ flex: 1, backgroundColor: '#17001F' }}>
-		<KeyboardAvoidingView
-			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-			keyboardVerticalOffset={100}
-			style={{ flex: 1 }}
-			enabled
-		>
-			<ScrollView>
+		<SafeAreaProvider style={{ flex: 1, backgroundColor: '#17001F' }}>
+			<KeyboardAvoidingView
+				behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+				keyboardVerticalOffset={100}
+				style={{ flex: 1 }}
+				enabled
+			>
+				<ScrollView>
 					<ThemeProvider theme={theme}>
 						<View style={{ width: '100%', height: '100%', backgroundColor: '#17001F' }}>
-							{/*<Text>User: {JSON.stringify(display)}</Text>*/}
-
 							<View style={{ display: 'flex', flexDirection: 'row-reverse', justifyContent: 'space-between' }}>
 								<TouchableOpacity
 									onPress={() => {
@@ -247,9 +251,9 @@ export default SearchPage = ({ navigation, route }) => {
 							/>
 						</View>
 					</ThemeProvider>
-			</ScrollView>
-		</KeyboardAvoidingView>
-				</SafeAreaProvider>
+				</ScrollView>
+			</KeyboardAvoidingView>
+		</SafeAreaProvider>
 	);
 };
 
