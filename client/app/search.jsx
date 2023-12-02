@@ -12,9 +12,9 @@ import axios from 'axios';
 Geocoder.init(GOOGLE_API);
 
 //having an issues initializing on my iphone, so i added this useeffect to initialize it on pageload
-// useEffect(() => {
-// 	Geocoder.init(GOOGLE_API);
-// }, []);
+useEffect(() => {
+	Geocoder.init(GOOGLE_API);
+}, []);
 
 const states = USStates;
 
