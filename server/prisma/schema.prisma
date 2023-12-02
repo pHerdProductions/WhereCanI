@@ -18,8 +18,8 @@ model User {
   display   String
   state     String
   username  String   @unique @db.VarChar(20)
-  posts     Post[]
-  ratings   Rating[]
+  posts       Post[]
+  ratings     Rating[]
 }
 
 model Poi {
@@ -35,7 +35,6 @@ model Poi {
   createdAt   DateTime  @default(now())
   posts       Post[]
   ratings     Rating[]
-  ratingAvg   Decimal   @db.Decimal(2, 1)
 }
 
 model Post {
