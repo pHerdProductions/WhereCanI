@@ -5,7 +5,7 @@ import { View, ScrollView, Keyboard, Alert, TouchableOpacity, Image, KeyboardAvo
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { USStates } from '../data/states';
 import * as SignupLogin from '../components/signup-login-inputs';
-import axios from 'axios';
+//import axios from 'axios';
 
 const states = USStates;
 
@@ -71,7 +71,6 @@ export default ProfilePage = ({ navigation, route }) => {
 								value={stateName}
 								onFocus={() => setDropFocus(true)}
 								onBlur={() => setDropFocus(false)}
-								//onSubmitEditing={() => emailInput.focus()}
 								onChange={(item) => {
 									setStateName(item.value);
 									setDropFocus(false);
@@ -80,14 +79,12 @@ export default ProfilePage = ({ navigation, route }) => {
 							<SignupLogin.UsernameInput
 								ref={(input) => (usernameInput = input)}
 								disabled={!editState}
-								//onSubmitEditing={() => {passwordInput.focus()}}
 								value={username}
 								onChangeText={(text) => setUsername(text)}
 							/>
 							<SignupLogin.EmailInput
 								ref={(input) => (emailInput = input)}
 								disabled={!editState}
-								//onSubmitEditing={() => { usernameInput.focus() }}
 								value={email}
 								onChangeText={(text) => setEmail(text)}
 							/>
