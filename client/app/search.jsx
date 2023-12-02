@@ -79,10 +79,6 @@ export default SearchPage = ({ navigation, route }) => {
 			.then(function (response) {
 				console.log('POIs:');
 				console.log(response.data.data);
-				console.log('=============');
-
-				console.log(response);
-
 				browseAddress(response.data.data);
 			})
 			.catch(function (error) {
