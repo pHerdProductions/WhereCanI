@@ -15,12 +15,12 @@ module.exports = {
 
 	getAllPOI: async (req, res) => {
 		try {
-			const result = await prisma.poi.findMany({});
-			// const result = await prisma.poi.findMany({
-			// 	include: {
-			// 		ratings: true,
-			// 	},
-			// });
+			// const result = await prisma.poi.findMany({});
+			const result = await prisma.poi.findMany({
+				select: {
+					ratings: true,
+				},
+			});
 
 			console.log('result: ');
 			console.log(result);
