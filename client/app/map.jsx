@@ -7,6 +7,7 @@ import { CustomMarker } from '../components/custom-marker';
 import Geocoder from 'react-native-geocoding';
 import axios from 'axios';
 import { GOOGLE_API, DB_URL } from '@env';
+console.log(DB_URL);
 
 Geocoder.init(GOOGLE_API);
 
