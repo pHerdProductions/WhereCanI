@@ -17,7 +17,7 @@ module.exports = {
 		try {
 			// const result = await prisma.poi.findMany({});
 			const result = await prisma.poi.findMany({
-				select: {
+				include: {
 					ratings: true,
 				},
 			});
