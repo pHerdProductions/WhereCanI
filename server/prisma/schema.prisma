@@ -35,6 +35,8 @@ model Poi {
   createdAt   DateTime  @default(now())
   posts       Post[]
   ratings     Rating[]
+  ratingAvg   Decimal   @db.Decimal(2, 1) @default(0.0)
+
 }
 
 model Post {
