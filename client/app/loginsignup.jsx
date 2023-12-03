@@ -13,6 +13,8 @@ import axios from 'axios';
 import { DB_URL } from '@env';
 import { Rating, RatingProps } from '@rneui/themed';
 
+console.log(DB_URL);
+
 SplashScreen.preventAutoHideAsync();
 
 const states = USStates; // All 50 states to populate State dropdown

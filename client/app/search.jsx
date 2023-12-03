@@ -8,6 +8,7 @@ import * as Search from '../components/search-inputs';
 import Geocoder from 'react-native-geocoding';
 import { GOOGLE_API, DB_URL } from '@env';
 import axios from 'axios';
+console.log(DB_URL);
 
 Geocoder.init(GOOGLE_API);
 
