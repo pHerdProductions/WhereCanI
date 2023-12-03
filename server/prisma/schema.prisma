@@ -36,6 +36,8 @@ model Poi {
   posts       Post[]
   ratings     Rating[]
   ratingAvg   Decimal   @db.Decimal(2, 1) @default(0.0)
+  rating   Int  @default(0)
+
 
 }
 
