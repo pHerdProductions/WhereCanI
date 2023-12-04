@@ -23,6 +23,23 @@ module.exports = {
 			res.status(400).json({ message: 'Error, could not fetch POIs: ', error: error });
 		}
 	},
+	updatePoi: async (req, res) => {
+		try {
+			const result = await prisma.poi.update({
+				where: {
+					id: req.body.id,
+				},
+				data: {
+					rating: req.body.rating,
+				},
+			});
+			console.log('result: ');
+			console.log(result);
+			res.status(200).json({ message: 'Success, here is your data: ', data: result });
+		} catch (error) {
+			res.status(400).json({ message: 'Error, could update: ', error: error });
+		}
+	},
 
 	searchPOI: async (req, res) => {
 		console.log('DATA: ');

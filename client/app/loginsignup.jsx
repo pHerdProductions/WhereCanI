@@ -92,7 +92,9 @@ export default LoginPage = ({ navigation }) => {
 			let signup = { email: email, username: userName, password: password, display: displayName, state: stateName };
 
 			axios
-				.post(`${DB_URL}/user`, signup)
+				// .post(`${DB_URL}/user`, signup)
+				.post(`https://wherecanibackend.onrender.com/user`, signup)
+
 				.then(function (response) {
 					navigation.replace('search', response.data.data);
 				})
@@ -107,7 +109,9 @@ export default LoginPage = ({ navigation }) => {
 			let login = { username: userName, password: password };
 
 			axios
-				.post(`${DB_URL}/user/login`, login)
+				// .post(`${DB_URL}/user/login`, login)
+				.post(`https://wherecanibackend.onrender.com/user/login`, login)
+
 				.then(function (response) {
 					navigation.replace('search', response.data.data);
 				})
@@ -119,7 +123,6 @@ export default LoginPage = ({ navigation }) => {
 					loginErrorAlert();
 				});
 		}
-
 		return;
 	};
 

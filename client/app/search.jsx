@@ -64,7 +64,7 @@ export default SearchPage = ({ navigation, route }) => {
 				let LatLng = locData.geometry.location;
 				let Bounds = locData.geometry.bounds;
 				let delta = Bounds.northeast.lat - Bounds.southwest.lat;
-				navigation.navigate('map', { lat: LatLng.lat, lng: LatLng.lng, latDelta: delta, POIs: POIs });
+				navigation.navigate('map', { lat: LatLng.lat, lng: LatLng.lng, latDelta: delta, POIs: POIs, user:route.params });
 			})
 			.finally(() => {
 				setIsSearching(false);
@@ -77,20 +77,13 @@ export default SearchPage = ({ navigation, route }) => {
 		Keyboard.dismiss();
 		setIsSearching(true);
 		axios
-			.get(`${DB_URL}/poi`)
+			// .get(`${DB_URL}/poi`)
+			.get(`https://wherecanibackend.onrender.com/poi`)
+
 			.then(function (response) {
 				console.log('POIs:');
 				console.log(response.data.data);
 
-				axios
-					.get(`${DB_URL}/rating`)
-					.then(function (response) {
-						console.log('ratings:');
-						console.log(response.data.data);
-					})
-					.catch(function (error) {
-						console.warn(error);
-					});
 				browseAddress(response.data.data);
 			})
 			.catch(function (error) {
@@ -110,7 +103,8 @@ export default SearchPage = ({ navigation, route }) => {
 			let hashtagsArr = hashtags.replaceAll('#', '').split(' ');
 			let search = { state: stateName, city: cityName, zipcode: zipcode, hashtags: hashtagsArr };
 			axios
-				.get(`${DB_URL}/poi/search`, { params: search })
+				// .get(`${DB_URL}/poi/search`, { params: search })
+				.get(`https://wherecanibackend.onrender.com/poi/search`, { params: search })
 				.then(function (response) {
 					let foundPOIs = response.data.data;
 					console.log('POIs:');

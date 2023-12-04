@@ -134,7 +134,9 @@ export default MapPage = ({ route, navigation }) => {
 		setIsSaving(true);
 
 		axios
-			.post(`${DB_URL}/poi`, newPOI)
+			// .post(`${DB_URL}/poi`, newPOI)
+			.post(`https://wherecanibackend.onrender.com/poi`, newPOI)
+
 			.then(function (response) {
 				setPOIS([...POIS, newPOI]);
 				console.log(response);
