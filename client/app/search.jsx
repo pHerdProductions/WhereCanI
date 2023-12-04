@@ -82,7 +82,8 @@ export default SearchPage = ({ navigation, route }) => {
 				console.log('POIs:');
 				console.log(response.data.data);
 
-				axios
+				{
+					/*axios
 					.get(`${DB_URL}/rating`)
 					.then(function (response) {
 						console.log('ratings:');
@@ -90,7 +91,8 @@ export default SearchPage = ({ navigation, route }) => {
 					})
 					.catch(function (error) {
 						console.warn(error);
-					});
+					});*/
+				}
 				browseAddress(response.data.data);
 			})
 			.catch(function (error) {
