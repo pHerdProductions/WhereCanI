@@ -13,6 +13,7 @@ module.exports = {
 		}
 	},
 	getAllPost: async (req, res) => {
+		console.log(req.query);
 		try {
 			const posts = await prisma.post.findMany({
 				where: {
