@@ -64,7 +64,7 @@ export default SearchPage = ({ navigation, route }) => {
 				let LatLng = locData.geometry.location;
 				let Bounds = locData.geometry.bounds;
 				let delta = Bounds.northeast.lat - Bounds.southwest.lat;
-				navigation.navigate('map', { lat: LatLng.lat, lng: LatLng.lng, latDelta: delta, POIs: POIs });
+				navigation.navigate('map', { lat: LatLng.lat, lng: LatLng.lng, latDelta: delta, POIs: POIs, user: route.params });
 			})
 			.finally(() => {
 				setIsSearching(false);
