@@ -81,10 +81,16 @@ export default SearchPage = ({ navigation, route }) => {
 			.then(function (response) {
 				console.log('POIs:');
 				console.log(response.data.data);
-				console.log('============:');
 
-				console.log(response.data.data.ratingAvg);
-
+				axios
+					.get(`${DB_URL}/rating`)
+					.then(function (response) {
+						console.log('ratings:');
+						console.log(response.data.data);
+					})
+					.catch(function (error) {
+						console.warn(error);
+					});
 				browseAddress(response.data.data);
 			})
 			.catch(function (error) {
