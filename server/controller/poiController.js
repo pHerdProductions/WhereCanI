@@ -15,7 +15,11 @@ module.exports = {
 
 	getAllPOI: async (req, res) => {
 		try {
-			const result = await prisma.poi.findMany({});
+			const result = await prisma.poi.findMany({
+				include: {
+					posts: true,
+				},
+			});
 			console.log('result: ');
 			console.log(result);
 			res.status(200).json({ message: 'Success, here is your data: ', data: result });
@@ -23,6 +27,7 @@ module.exports = {
 			res.status(400).json({ message: 'Error, could not fetch POIs: ', error: error });
 		}
 	},
+
 	updatePoi: async (req, res) => {
 		try {
 			const result = await prisma.poi.update({
