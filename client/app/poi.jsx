@@ -7,7 +7,10 @@ import axios from 'axios';
 
 export default PoiPage = ({ navigation, route }) => {
 	// Passed in POI
-	const POI = route.params.POI;
+	const { POI, POIComments } = route.params;
+
+	//useStates
+	const [comments, setComments] = useState(POIComments);
 
 	// References for our inputs
 	let commentInput = useRef(null);

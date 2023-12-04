@@ -3,7 +3,6 @@ import { Text, View, TextInput, Button } from 'react-native';
 import { Callout, Marker } from 'react-native-maps';
 import { Rating } from '@rneui/themed';
 import { AirbnbRating } from 'react-native-ratings';
-
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 
@@ -32,16 +31,12 @@ const CustomMarker = React.forwardRef((props, ref) => {
 		console.log(updateData);
 
 		axios
-			// .post(`${DB_URL}/user`, signup)
-			.put(`https://wherecanibackend.onrender.com/poi`, updateData)
-
+			.put(`${DB_URL}/poi`, updateData)
 			.then(function (response) {
-				// navigation.replace('search', response.data.data);
 				console.log(response.data);
 			})
 			.catch(function (error) {
 				console.log(error);
-				singupErrorAlert();
 			});
 	};
 	const [number, onChangeNumber] = React.useState('');
@@ -53,8 +48,16 @@ const CustomMarker = React.forwardRef((props, ref) => {
 	const navigation = useNavigation();
 
 	const openPOIPage = (POI) => {
-		navigation.navigate('poi', { POI: POI });
-		console.log(POI);
+		axios
+			.get(`${DB_URL}/post`, { params: { id: POI.id } })
+			.then(function (response) {
+				console.log('Posts: ');
+				console.log(response.data.data);
+				navigation.navigate('poi', { POI: POI, POIComments: response.data.data });
+			})
+			.catch(function (error) {
+				console.warn(error);
+			});
 	};
 
 	return (
