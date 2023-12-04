@@ -14,10 +14,11 @@ module.exports = {
 	},
 	getAllPost: async (req, res) => {
 		console.log(req.query);
+		let poiId = req.query.id;
 		try {
 			const posts = await prisma.post.findMany({
 				where: {
-					poiId: req.query.id,
+					poiId: poiId,
 				},
 			});
 			console.log({ message: 'Retrieved Posts: ', data: posts });
