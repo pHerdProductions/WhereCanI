@@ -7,31 +7,35 @@ module.exports = {
 			await prisma.post.create({
 				data: newPost,
 			});
-			res.status(200).json({ Message: 'Success a new POI was created', data: newPost });
+			res.status(200).json({ message: 'Success, a new Post was created: ', data: newPost });
 		} catch (error) {
-			res.status(400).json({ message: 'error has data was not sent poi', error: error });
+			res.status(400).json({ message: 'Error, a new Post was not created: ', error: error });
 		}
 	},
 	getAllPost: async (req, res) => {
 		try {
-			const ret = await prisma.post.findMany();
-			console.log({ data: ret, message: 'data' });
-
-			res.status(200).json({ message: 'here is your data', data: ret });
-		} catch (error) {
-			res.status(400).json(error);
-		}
-	},
-	getIndividualPOI: async (req, res) => {
-		try {
-			const user = await prisma.post.findUnique({
+			const posts = await prisma.post.findMany({
 				where: {
-					username: req.body.id,
+					poiId: req.query.id,
 				},
 			});
-			res.status(401).json({ message: 'invalid password or userid', Error: error });
+			console.log({ message: 'Retrieved Posts: ', data: posts });
+
+			res.status(200).json({ message: 'Retrieved Posts: ', data: posts });
 		} catch (error) {
-			res.status(400).json({ message: 'invalide request', Error: error });
+			res.status(400).json({ message: 'Error fetching Posts: ', error });
+		}
+	},
+	getIndividualPost: async (req, res) => {
+		try {
+			const post = await prisma.post.findUnique({
+				where: {
+					id: req.query.id,
+				},
+			});
+			res.status(200).json({ message: 'Retrieved Post: ', data: post });
+		} catch (error) {
+			res.status(400).json({ message: 'Error fetching Post: ', error: error });
 		}
 	},
 };
