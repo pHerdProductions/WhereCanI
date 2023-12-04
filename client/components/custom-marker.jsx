@@ -31,7 +31,7 @@ const CustomMarker = React.forwardRef((props, ref) => {
 					<Text style={{ color: '#50006D', fontWeight: 'normal', fontSize: 12, textAlign: 'center', flex: 1 }}>{POI.description}</Text>
 					<Text style={{ color: '#0000C2', fontWeight: 'normal', fontSize: 11, textAlign: 'center', flex: 1 }}>{'#' + POI.hashtags.join(' #')}</Text>
 					<Rating
-						style={{ color: '#0000C2', fontWeight: 'normal', fontSize: 11, textAlign: 'center', flex: 1, paddingVertical: 10 }}
+						style={{ color: '#0000C2', fontWeight: 'normal', fontSize: 11, textAlign: 'center', flex: 1, paddingVertical: 10, width: 5 }}
 						showRating
 						type='star'
 						fractions={1}
