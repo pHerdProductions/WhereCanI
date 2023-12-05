@@ -5,6 +5,7 @@ import { Rating } from '@rneui/themed';
 import { AirbnbRating } from 'react-native-ratings';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
+import { DB_URL } from '@env';
 
 const generatePOICoordinate = (POI) => {
 	const coordinate = {
@@ -48,16 +49,7 @@ const CustomMarker = React.forwardRef((props, ref) => {
 	const navigation = useNavigation();
 
 	const openPOIPage = (POI) => {
-		axios
-			.get(`${DB_URL}/post`, { params: { id: POI.id } })
-			.then(function (response) {
-				console.log('Posts: ');
-				console.log(response.data.data);
-				navigation.navigate('poi', { POI: POI, POIComments: response.data.data });
-			})
-			.catch(function (error) {
-				console.warn(error);
-			});
+		navigation.navigate('poi', { POI: POI });
 	};
 
 	return (
