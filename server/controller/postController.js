@@ -12,6 +12,7 @@ module.exports = {
 			res.status(400).json({ message: 'Error, a new Post was not created: ', error: error });
 		}
 	},
+
 	getAllPost: async (req, res) => {
 		console.log(req.query);
 		let poiId = req.query.id;
@@ -28,6 +29,7 @@ module.exports = {
 			res.status(400).json({ message: 'Error fetching Posts: ', error });
 		}
 	},
+
 	getIndividualPost: async (req, res) => {
 		try {
 			const post = await prisma.post.findUnique({
