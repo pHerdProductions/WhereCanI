@@ -4,13 +4,14 @@ import { ThemeProvider, createTheme, Button, Text, Icon } from '@rneui/themed';
 import { View, ScrollView, Keyboard, Alert, TouchableOpacity, Image, KeyboardAvoidingView } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import axios from 'axios';
+import { DB_URL } from '@env';
 
 export default PoiPage = ({ navigation, route }) => {
 	// Passed in POI
-	const { POI, POIComments } = route.params;
+	const { POI } = route.params;
 
 	//useStates
-	const [comments, setComments] = useState(POIComments);
+	const [comments, setComments] = useState(POI.posts);
 
 	// References for our inputs
 	let commentInput = useRef(null);
@@ -38,7 +39,9 @@ export default PoiPage = ({ navigation, route }) => {
 								onPress={() => navigation.goBack()}
 							/>
 							<Text h1>{POI?.title ?? 'Title'}</Text>
-							<Text h3>{POI.description ?? 'Description'}</Text>
+							<Text h3>{POI?.description ?? 'Description'}</Text>
+							<Text h3>{POI?.posts[0].comment ?? 'Comment 1'}</Text>
+							<Text h3>{comments[0].comment ?? 'Comment 1'}</Text>
 						</View>
 					</ScrollView>
 				</KeyboardAvoidingView>
