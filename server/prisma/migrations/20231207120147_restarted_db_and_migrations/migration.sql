@@ -24,7 +24,6 @@ CREATE TABLE "Poi" (
     "hashtags" VARCHAR(30)[],
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "ratingAvg" DECIMAL(2,1) NOT NULL DEFAULT 0.0,
-    "rating" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "Poi_pkey" PRIMARY KEY ("id")
 );
