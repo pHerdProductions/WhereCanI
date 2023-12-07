@@ -15,12 +15,7 @@ module.exports = {
 
 	getAllPOI: async (req, res) => {
 		try {
-			const result = await prisma.poi.findMany({
-				include: {
-					posts: true,
-					ratings: true,
-				},
-			});
+			const result = await prisma.poi.findMany({});
 			console.log('result: ');
 			console.log(result);
 			res.status(200).json({ message: 'Success, here is your data: ', data: result });
@@ -69,10 +64,6 @@ module.exports = {
 							  }
 							: {},
 					],
-				},
-				include: {
-					posts: true,
-					ratings: true,
 				},
 			});
 			console.log('result: ');
