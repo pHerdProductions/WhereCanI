@@ -23,35 +23,37 @@ model User {
 }
 
 model Poi {
-  id          String    @id @default(uuid())
-  latitude    Decimal   @db.Decimal(21, 18)
-  longitude   Decimal   @db.Decimal(21, 18)
+  id          String   @id @default(uuid())
+  latitude    Decimal  @db.Decimal(21, 18)
+  longitude   Decimal  @db.Decimal(21, 18)
   state       String
   city        String
   zipcode     Int
-  title       String    @db.VarChar(100)
-  description String    @db.VarChar(300)
-  hashtags    String[]  @db.VarChar(30)
-  createdAt   DateTime  @default(now())
+  title       String   @db.VarChar(100)
+  description String   @db.VarChar(300)
+  hashtags    String[] @db.VarChar(30)
+  createdAt   DateTime @default(now())
   posts       Post[]
   ratings     Rating[]
-  ratingAvg   Decimal   @db.Decimal(2, 1) @default(0.0)
+  ratingAvg   Decimal  @default(0.0) @db.Decimal(2, 1)
 }
 
 model Post {
-  id       String  @id @default(uuid())
-  comment  String  @db.VarChar(200)
-  authorId String
-  poiId    String
-  author   User    @relation(fields: [authorId], references: [id])
-  poi      Poi     @relation(fields: [poiId], references: [id])
+  id        String   @id @default(uuid())
+  comment   String   @db.VarChar(200)
+  authorId  String
+  poiId     String
+  author    User     @relation(fields: [authorId], references: [id])
+  poi       Poi      @relation(fields: [poiId], references: [id])
+  name      String
+  createdAt DateTime @default(now())
 }
 
 model Rating {
-  id        String  @id @default(uuid())
-  rating    Decimal @db.Decimal(2, 1)
-  userId    String
-  user      User    @relation(fields: [userId], references: [id])
-  poiId     String
-  poi       Poi     @relation(fields: [poiId], references: [id])
+  id     String  @id @default(uuid())
+  rating Decimal @db.Decimal(2, 1)
+  userId String
+  user   User    @relation(fields: [userId], references: [id])
+  poiId  String
+  poi    Poi     @relation(fields: [poiId], references: [id])
 }
