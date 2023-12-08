@@ -1,10 +1,11 @@
-import React from 'react';
-import { Text, View, TextInput, Button } from 'react-native';
+import React, { useEffect } from 'react';
+import { Text, View } from 'react-native';
 import { Callout, Marker } from 'react-native-maps';
-import { Rating } from '@rneui/themed';
 import { AirbnbRating } from 'react-native-ratings';
-
 import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
+import { REACT_APP_DB_URL } from '@env';
+import { useIsFocused } from '@react-navigation/native';
 
 const generatePOICoordinate = (POI) => {
 	const coordinate = {
@@ -19,35 +20,20 @@ const generatePOICoordinate = (POI) => {
 const CustomMarker = React.forwardRef((props, ref) => {
 	const POI = props.POI;
 	const [poi, onChangePOI] = React.useState(POI);
-	const [index, onChangeindex] = React.useState(0);
+	const navigation = useNavigation();
 
-	//handle submitting rating
-	const submitRating = () => {
-		onChangeindex(1);
-		let newnumber = (poi.rating + Number(number)) / 2;
-
-		onChangePOI({ rating: newnumber });
-		let updateData = { id: POI.id, rating: newnumber };
-		console.log(updateData);
-
+	const openPOIPage = (POI) => {
 		axios
-			// .post(`${DB_URL}/user`, signup)
-			.put(`https://wherecanibackend.onrender.com/poi`, updateData)
-
+			.get(`${REACT_APP_DB_URL}/post`, { params: { id: POI.id } })
 			.then(function (response) {
-				// navigation.replace('search', response.data.data);
-				console.log(response.data);
+				console.log('Posts: ');
+				console.log(response.data.data);
+				navigation.navigate('poi', { POI: POI, POIComments: response.data.data });
 			})
 			.catch(function (error) {
-				console.log(error);
-				singupErrorAlert();
+				console.warn(error);
 			});
 	};
-	const [number, onChangeNumber] = React.useState('');
-
-	function ratingCompleted(rating) {
-		console.log('Rating is: ' + rating);
-	}
 
 	return (
 		<Marker
@@ -55,12 +41,14 @@ const CustomMarker = React.forwardRef((props, ref) => {
 			image={require('./../app/images/WCImark84.png')}
 			ref={ref}
 		>
-			<Callout>
+			<Callout onPress={() => openPOIPage(POI)}>
 				<View style={{ flex: 1 }}>
 					<Text style={{ color: '#000000', fontWeight: 'bold', fontSize: 15, textAlign: 'center', flex: 1 }}>{POI.title}</Text>
-					<Text style={{ color: '#50006D', fontWeight: 'normal', fontSize: 12, textAlign: 'center', flex: 1 }}>{POI.description}</Text>
+					<View style={{ flexDirection: 'row', width: 130 }}>
+						<Text style={{ color: '#50006D', fontWeight: 'normal', fontSize: 12, textAlign: 'center', flex: 1, flexShrink: 1 }}>{POI.description}</Text>
+					</View>
+
 					<Text style={{ color: '#0000C2', fontWeight: 'normal', fontSize: 11, textAlign: 'center', flex: 1 }}>{'#' + POI.hashtags.join(' #')}</Text>
-					{/* <Text style={{ color: '#ffbf00', fontWeight: 'normal', fontSize: 12, textAlign: 'center', flex: 1 }}>{poi.rating + '/5'}</Text> */}
 					<AirbnbRating
 						count={5}
 						readonly
@@ -68,24 +56,6 @@ const CustomMarker = React.forwardRef((props, ref) => {
 						defaultRating={poi.rating}
 						size={20}
 					/>
-					{/* 					
-					{index == 0 ? (
-						<View>
-							<TextInput
-								style={{ height: 40, margin: 12, borderWidth: 1, padding: 10 }}
-								onChangeText={onChangeNumber}
-								value={number}
-								placeholder='Rating between 1-5'
-								keyboardType='numeric'
-							/>
-							<Button
-								title='Save'
-								onPress={() => submitRating()}
-							/>
-						</View>
-					) : (
-						''
-					)} */}
 				</View>
 			</Callout>
 		</Marker>
