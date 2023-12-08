@@ -1,6 +1,6 @@
 // The POI page, viewing POI info, comments, and ratings
 import React, { useState, useRef } from 'react';
-import { ThemeProvider, createTheme, Button, Text, Icon } from '@rneui/themed';
+import { ThemeProvider, createTheme, Button, Text, Icon, Input } from '@rneui/themed';
 import { View, ScrollView, Keyboard, Alert, TouchableOpacity, Image, KeyboardAvoidingView, TextInput } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AirbnbRating } from 'react-native-ratings';
@@ -76,10 +76,11 @@ export default PoiPage = ({ navigation, route }) => {
 							<Text h3>{POI.zip ?? 'Zip'}</Text>
 
 							<View>
-								<TextInput
-									style={{ height: 40, margin: 12, borderWidth: 1, padding: 10 }}
+								<Input
+									style={{ height: 40, margin: 12, borderWidth: 1, padding: 10, borderWidth: 0, color: '#86939e' }}
 									onChangeText={onChangeNumber}
 									value={number}
+									// placeholderTextColor='#86939e'
 									placeholder='Rating between 1-5'
 									keyboardType='numeric'
 								/>
