@@ -1,13 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, createContext } from 'react';
 import { Image, StyleSheet, Text, View, Dimensions, SafeAreaView, Alert, Modal, Pressable } from 'react-native';
 import { Button, Input } from '@rneui/themed';
 import MapView from 'react-native-maps';
 import { CustomMarker } from '../components/custom-marker';
 import Geocoder from 'react-native-geocoding';
 import axios from 'axios';
-import { GOOGLE_API, DB_URL } from '@env';
+import { GOOGLE_API, REACT_APP_DB_URL } from '@env';
 
+const UserContext = createContext();
 Geocoder.init(GOOGLE_API);
 
 export default MapPage = ({ route, navigation }) => {
@@ -17,6 +18,7 @@ export default MapPage = ({ route, navigation }) => {
 
 	// Received parameters from the search page
 	const { lat, lng, latDelta, POIs } = route.params;
+	const [user, setUser] = useState('Jesse Hall');
 
 	// The region the MapView is showing
 	const [region, setRegion] = useState({
@@ -133,7 +135,7 @@ export default MapPage = ({ route, navigation }) => {
 		setIsSaving(true);
 
 		axios
-			.post(`${DB_URL}/poi`, newPOI)
+			.post(`${REACT_APP_DB_URL}/poi`, newPOI)
 			.then(function (response) {
 				setPOIS([...POIS, newPOI]);
 				console.log(response);
@@ -150,157 +152,159 @@ export default MapPage = ({ route, navigation }) => {
 
 	return (
 		<SafeAreaView style={styles.safeAreaView}>
-			<View style={styles.container}>
-				{/*Render our MapView*/}
-				<MapView
-					style={styles.map}
-					initialRegion={region} // Specify our initial coordinates/region
-					// When the user stops scrolling/panning, set the region:
-					onRegionChangeComplete={(region) => setRegion(region)}
-					onLongPress={(e) => {
-						onLongPress(e);
-					}}
-				>
-					{/* Map the array of POIs to a bunch of CustomMarkers to display on the map */}
-					{POIS.map((POI, index) => (
-						<CustomMarker
-							POI={POI}
-							key={index}
-						/>
-					))}
-					{/* Here we check if there is a *temporary* newPOI that has been created. If so, we can show a Marker for it */}
+			<UserContext.Provider value={user}>
+				<View style={styles.container}>
+					{/*Render our MapView*/}
+					<MapView
+						style={styles.map}
+						initialRegion={region} // Specify our initial coordinates/region
+						// When the user stops scrolling/panning, set the region:
+						onRegionChangeComplete={(region) => setRegion(region)}
+						onLongPress={(e) => {
+							onLongPress(e);
+						}}
+					>
+						{/* Map the array of POIs to a bunch of CustomMarkers to display on the map */}
+						{POIS.map((POI, index) => (
+							<CustomMarker
+								POI={POI}
+								key={index}
+							/>
+						))}
+						{/* Here we check if there is a *temporary* newPOI that has been created. If so, we can show a Marker for it */}
+						{newPOI ? (
+							<CustomMarker
+								POI={newPOI}
+								key={POIS.length + 1}
+								ref={newMarkerRef}
+							/>
+						) : (
+							<></>
+						)}
+					</MapView>
+
+					<View style={{ position: 'relative' }}>
+						<Modal
+							style={{ position: 'absolute', top: 0, bottom: 0, backgroundColor: '#17001F' }}
+							animationType='slide'
+							transparent={true}
+							visible={modalVisible}
+							onRequestClose={() => {
+								setModalVisible(false);
+							}}
+						>
+							<View style={styles.centeredView}>
+								<View style={styles.modalView}>
+									{/* Conditional for checking if the user longpressed on a valid location to set a POI to,
+								and changing the Modal's content based on that */}
+									{correctLoc ? (
+										<>
+											<Text style={styles.modalText}>Enter POI Info</Text>
+											<Input
+												style={styles.input}
+												onChangeText={setNewTitle}
+												placeholder='Title'
+												value={newTitle}
+											/>
+											<Input
+												style={styles.input}
+												multiline={true}
+												onChangeText={setNewDesc}
+												placeholder='Description'
+												value={newDesc}
+											/>
+											<Input
+												style={styles.input}
+												multiline={true}
+												onChangeText={setNewHashtags}
+												placeholder='#hash #tags'
+												value={newHashtags}
+											/>
+											<Pressable
+												style={[styles.button, styles.buttonOpen]}
+												onPress={() => saveModal()}
+											>
+												<Text style={styles.textStyle}>Continue</Text>
+											</Pressable>
+											<Pressable
+												style={[styles.button, styles.buttonClose]}
+												onPress={() => setModalVisible(false)}
+											>
+												<Text style={styles.textStyle}>Cancel</Text>
+											</Pressable>
+										</>
+									) : (
+										<>
+											<Text style={styles.modalText}>Cannot Place POI Here</Text>
+											<Pressable
+												style={[styles.button, styles.buttonClose]}
+												onPress={() => setModalVisible(false)}
+											>
+												<Text style={styles.textStyle}>OK</Text>
+											</Pressable>
+										</>
+									)}
+								</View>
+							</View>
+						</Modal>
+					</View>
+
 					{newPOI ? (
-						<CustomMarker
-							POI={newPOI}
-							key={POIS.length + 1}
-							ref={newMarkerRef}
-						/>
+						<View
+							flexDirection='row'
+							style={{ width: '80%', justifyContent: 'space-between', paddingBottom: 25 }}
+						>
+							<Button
+								size='lg'
+								buttonStyle={{ backgroundColor: '#8F00FF', borderWidth: 1.5, borderColor: '#000000' }}
+								disabledStyle={{ backgroundColor: '#310041' }}
+								containerStyle={{ width: 150 }}
+								loading={isSaving}
+								disabled={isSaving}
+								onPress={() => sendPOI()}
+							>
+								Save POI
+							</Button>
+							<Button
+								size='lg'
+								buttonStyle={{ backgroundColor: '#D49DFF', borderWidth: 1.5, borderColor: '#000000' }}
+								disabledStyle={{ backgroundColor: '#310041' }}
+								containerStyle={{ width: 150 }}
+								loading={isSaving}
+								disabled={isSaving}
+								onPress={() => clearStates()}
+							>
+								Cancel
+							</Button>
+						</View>
 					) : (
 						<></>
 					)}
-				</MapView>
 
-				<View style={{ position: 'relative' }}>
-					<Modal
-						style={{ position: 'absolute', top: 0, bottom: 0, backgroundColor: '#17001F' }}
-						animationType='slide'
-						transparent={true}
-						visible={modalVisible}
-						onRequestClose={() => {
-							setModalVisible(false);
+					<Button
+						title='Back'
+						type='outline'
+						raised
+						titleStyle={{ color: '#FFFFFF', fontSize: 20, fontWeight: 'bold' }}
+						buttonStyle={{ backgroundColor: '#8F00FF', borderColor: '#D49DFF}', borderWidth: 1.5 }}
+						containerStyle={{ position: 'absolute', top: 10, left: 10 }}
+						onPress={() => navigation.goBack()}
+					/>
+
+					<Image
+						source={require('./images/WCIlogo.png')}
+						style={{
+							position: 'absolute',
+							top: 10,
+							right: 10,
+							width: 80,
+							height: 40,
 						}}
-					>
-						<View style={styles.centeredView}>
-							<View style={styles.modalView}>
-								{/* Conditional for checking if the user longpressed on a valid location to set a POI to,
-								and changing the Modal's content based on that */}
-								{correctLoc ? (
-									<>
-										<Text style={styles.modalText}>Enter POI Info</Text>
-										<Input
-											style={styles.input}
-											onChangeText={setNewTitle}
-											placeholder='Title'
-											value={newTitle}
-										/>
-										<Input
-											style={styles.input}
-											multiline={true}
-											onChangeText={setNewDesc}
-											placeholder='Description'
-											value={newDesc}
-										/>
-										<Input
-											style={styles.input}
-											multiline={true}
-											onChangeText={setNewHashtags}
-											placeholder='#hash #tags'
-											value={newHashtags}
-										/>
-										<Pressable
-											style={[styles.button, styles.buttonOpen]}
-											onPress={() => saveModal()}
-										>
-											<Text style={styles.textStyle}>Continue</Text>
-										</Pressable>
-										<Pressable
-											style={[styles.button, styles.buttonClose]}
-											onPress={() => setModalVisible(false)}
-										>
-											<Text style={styles.textStyle}>Cancel</Text>
-										</Pressable>
-									</>
-								) : (
-									<>
-										<Text style={styles.modalText}>Cannot Place POI Here</Text>
-										<Pressable
-											style={[styles.button, styles.buttonClose]}
-											onPress={() => setModalVisible(false)}
-										>
-											<Text style={styles.textStyle}>OK</Text>
-										</Pressable>
-									</>
-								)}
-							</View>
-						</View>
-					</Modal>
+					/>
+
+					<StatusBar style='auto' />
 				</View>
-
-				{newPOI ? (
-					<View
-						flexDirection='row'
-						style={{ width: '80%', justifyContent: 'space-between', paddingBottom: 25 }}
-					>
-						<Button
-							size='lg'
-							buttonStyle={{ backgroundColor: '#8F00FF', borderWidth: 1.5, borderColor: '#000000' }}
-							disabledStyle={{ backgroundColor: '#310041' }}
-							containerStyle={{ width: 150 }}
-							loading={isSaving}
-							disabled={isSaving}
-							onPress={() => sendPOI()}
-						>
-							Save POI
-						</Button>
-						<Button
-							size='lg'
-							buttonStyle={{ backgroundColor: '#D49DFF', borderWidth: 1.5, borderColor: '#000000' }}
-							disabledStyle={{ backgroundColor: '#310041' }}
-							containerStyle={{ width: 150 }}
-							loading={isSaving}
-							disabled={isSaving}
-							onPress={() => clearStates()}
-						>
-							Cancel
-						</Button>
-					</View>
-				) : (
-					<></>
-				)}
-
-				<Button
-					title='Back'
-					type='outline'
-					raised
-					titleStyle={{ color: '#FFFFFF', fontSize: 20, fontWeight: 'bold' }}
-					buttonStyle={{ backgroundColor: '#8F00FF', borderColor: '#D49DFF}', borderWidth: 1.5 }}
-					containerStyle={{ position: 'absolute', top: 10, left: 10 }}
-					onPress={() => navigation.goBack()}
-				/>
-
-				<Image
-					source={require('./images/WCIlogo.png')}
-					style={{
-						position: 'absolute',
-						top: 10,
-						right: 10,
-						width: 80,
-						height: 40,
-					}}
-				/>
-
-				<StatusBar style='auto' />
-			</View>
+			</UserContext.Provider>
 		</SafeAreaView>
 	);
 };

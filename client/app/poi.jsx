@@ -1,8 +1,11 @@
 // The POI page, viewing POI info, comments, and ratings
 import React, { useState, useRef } from 'react';
 import { ThemeProvider, createTheme, Button, Text, Icon } from '@rneui/themed';
-import { View, ScrollView, Keyboard, Alert, TouchableOpacity, Image, KeyboardAvoidingView } from 'react-native';
+import { View, ScrollView, Keyboard, Alert, TouchableOpacity, Image, KeyboardAvoidingView, TextInput } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { AirbnbRating } from 'react-native-ratings';
+import { REACT_APP_DB_URL } from '@env';
+
 import axios from 'axios';
 
 export default PoiPage = ({ navigation, route }) => {
@@ -18,6 +21,27 @@ export default PoiPage = ({ navigation, route }) => {
 	const handleComment = () => {
 		// handle axois here
 	};
+
+	const [poi, onChangePOI] = React.useState(POI);
+
+	//handle submitting rating
+	const submitRating = () => {
+		let newnumber = (poi.rating + Number(number)) / 2;
+
+		onChangePOI({ rating: newnumber });
+		let updateData = { id: POI.id, rating: newnumber };
+		console.log(updateData);
+
+		axios
+			.put(`${REACT_APP_DB_URL}/poi`, updateData)
+			.then(function (response) {
+				console.log(response.data);
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	};
+	const [number, onChangeNumber] = React.useState('');
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -38,7 +62,32 @@ export default PoiPage = ({ navigation, route }) => {
 								onPress={() => navigation.goBack()}
 							/>
 							<Text h1>{POI?.title ?? 'Title'}</Text>
+							<AirbnbRating
+								count={5}
+								readonly
+								reviews={['Terrible', 'Meh', 'OK', 'Good', 'Great']}
+								defaultRating={poi.rating}
+								size={20}
+							/>
 							<Text h3>{POI.description ?? 'Description'}</Text>
+							<Text h3>{'#' + POI?.hashtags.join(' #')}</Text>
+							<Text h3>{POI.city ?? 'State'}</Text>
+							<Text h3>{POI.state ?? 'City'}</Text>
+							<Text h3>{POI.zip ?? 'Zip'}</Text>
+
+							<View>
+								<TextInput
+									style={{ height: 40, margin: 12, borderWidth: 1, padding: 10 }}
+									onChangeText={onChangeNumber}
+									value={number}
+									placeholder='Rating between 1-5'
+									keyboardType='numeric'
+								/>
+								<Button
+									title='Save'
+									onPress={() => submitRating()}
+								/>
+							</View>
 						</View>
 					</ScrollView>
 				</KeyboardAvoidingView>

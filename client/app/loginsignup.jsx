@@ -10,10 +10,9 @@ import { cacheImages } from './helpers/AssetsCaching';
 import * as SignupLogin from '../components/signup-login-inputs';
 import { USStates } from '../data/states';
 import axios from 'axios';
-import { DB_URL } from '@env';
-import { Rating, RatingProps } from '@rneui/themed';
+import { REACT_APP_DB_URL } from '@env';
 
-console.log(DB_URL);
+console.log(REACT_APP_DB_URL);
 
 SplashScreen.preventAutoHideAsync();
 
@@ -92,7 +91,7 @@ export default LoginPage = ({ navigation }) => {
 			let signup = { email: email, username: userName, password: password, display: displayName, state: stateName };
 
 			axios
-				.post(`${DB_URL}/user`, signup)
+				.post(`${REACT_APP_DB_URL}/user`, signup)
 				.then(function (response) {
 					navigation.replace('search', response.data.data);
 				})
@@ -107,7 +106,7 @@ export default LoginPage = ({ navigation }) => {
 			let login = { username: userName, password: password };
 
 			axios
-				.post(`${DB_URL}/user/login`, login)
+				.post(`${REACT_APP_DB_URL}/user/login`, login)
 				.then(function (response) {
 					navigation.replace('search', response.data.data);
 				})

@@ -6,9 +6,9 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { USStates } from '../data/states';
 import * as Search from '../components/search-inputs';
 import Geocoder from 'react-native-geocoding';
-import { GOOGLE_API, DB_URL } from '@env';
+import { GOOGLE_API, REACT_APP_DB_URL } from '@env';
 import axios from 'axios';
-console.log(DB_URL);
+console.log(REACT_APP_DB_URL);
 
 Geocoder.init(GOOGLE_API);
 
@@ -71,20 +71,20 @@ export default SearchPage = ({ navigation, route }) => {
 			})
 			.catch((error) => console.warn(error));
 	};
-
+	
 	// Browse All POIs from the DB
 	const browseAllPOIs = () => {
 		Keyboard.dismiss();
 		setIsSearching(true);
 		axios
-			.get(`${DB_URL}/poi`)
+			.get(`${REACT_APP_DB_URL}/poi`)
 			.then(function (response) {
 				console.log('POIs:');
 				console.log(response.data.data);
 
 				{
 					/*axios
-					.get(`${DB_URL}/rating`)
+					.get(`${REACT_APP_DB_URL}/rating`)
 					.then(function (response) {
 						console.log('ratings:');
 						console.log(response.data.data);
@@ -112,7 +112,7 @@ export default SearchPage = ({ navigation, route }) => {
 			let hashtagsArr = hashtags.replaceAll('#', '').split(' ');
 			let search = { state: stateName, city: cityName, zipcode: zipcode, hashtags: hashtagsArr };
 			axios
-				.get(`${DB_URL}/poi/search`, { params: search })
+				.get(`${REACT_APP_DB_URL}/poi/search`, { params: search })
 				.then(function (response) {
 					let foundPOIs = response.data.data;
 					console.log('POIs:');
