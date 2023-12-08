@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -33,9 +30,9 @@ model Poi {
   description String   @db.VarChar(300)
   hashtags    String[] @db.VarChar(30)
   createdAt   DateTime @default(now())
+  ratingAvg   Decimal  @default(0.0) @db.Decimal(2, 1)
   posts       Post[]
   ratings     Rating[]
-  ratingAvg   Decimal  @default(0.0) @db.Decimal(2, 1)
 }
 
 model Post {
@@ -43,17 +40,17 @@ model Post {
   comment   String   @db.VarChar(200)
   authorId  String
   poiId     String
+  createdAt DateTime @default(now())
+  name      String
   author    User     @relation(fields: [authorId], references: [id])
   poi       Poi      @relation(fields: [poiId], references: [id])
-  name      String
-  createdAt DateTime @default(now())
 }
 
 model Rating {
   id     String  @id @default(uuid())
   rating Decimal @db.Decimal(2, 1)
   userId String
-  user   User    @relation(fields: [userId], references: [id])
   poiId  String
   poi    Poi     @relation(fields: [poiId], references: [id])
+  user   User    @relation(fields: [userId], references: [id])
 }

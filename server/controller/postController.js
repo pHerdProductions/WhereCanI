@@ -7,8 +7,12 @@ module.exports = {
 			await prisma.post.create({
 				data: newPost,
 			});
+			console.log('New post:');
+			console.log(newPost);
 			res.status(200).json({ message: 'Success, a new Post was created: ', data: newPost });
 		} catch (error) {
+			console.log('ERROR:');
+			console.log(error);
 			res.status(400).json({ message: 'Error, a new Post was not created: ', error: error });
 		}
 	},
