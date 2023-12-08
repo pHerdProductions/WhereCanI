@@ -11,6 +11,7 @@ const states = USStates;
 
 export default ProfilePage = ({ navigation, route }) => {
 	// Thinking about enabling editing user information
+	const user = route.params;
 	const [userId, setUserId] = useState(route.params.id);
 	const [email, setEmail] = useState(route.params.email);
 	const [username, setUsername] = useState(route.params.username);

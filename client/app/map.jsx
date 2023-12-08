@@ -16,7 +16,7 @@ export default MapPage = ({ route, navigation }) => {
 	const deviceRatio = deviceWidth / deviceHeight; // Device screen's aspect ratio
 
 	// Received parameters from the search page
-	const { lat, lng, latDelta, POIs } = route.params;
+	const { lat, lng, latDelta, POIs, user } = route.params;
 
 	// The region the MapView is showing
 	const [region, setRegion] = useState({
@@ -165,6 +165,7 @@ export default MapPage = ({ route, navigation }) => {
 					{POIS.map((POI, index) => (
 						<CustomMarker
 							POI={POI}
+							user={user}
 							key={index}
 						/>
 					))}
@@ -172,6 +173,7 @@ export default MapPage = ({ route, navigation }) => {
 					{newPOI ? (
 						<CustomMarker
 							POI={newPOI}
+							user={user}
 							key={POIS.length + 1}
 							ref={newMarkerRef}
 						/>

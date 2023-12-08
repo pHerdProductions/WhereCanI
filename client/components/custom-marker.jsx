@@ -19,6 +19,7 @@ const generatePOICoordinate = (POI) => {
 
 const CustomMarker = React.forwardRef((props, ref) => {
 	const POI = props.POI;
+	const user = props.user;
 	const [poi, onChangePOI] = React.useState(POI);
 	const [index, onChangeindex] = React.useState(0);
 
@@ -49,7 +50,9 @@ const CustomMarker = React.forwardRef((props, ref) => {
 	const navigation = useNavigation();
 
 	const openPOIPage = (POI) => {
-		navigation.navigate('poi', { POI: POI });
+		console.log(POI);
+		console.log(user);
+		navigation.navigate('poi', { POI: POI, user: user });
 	};
 
 	return (

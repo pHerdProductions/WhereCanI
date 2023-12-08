@@ -1,23 +1,49 @@
 // The POI page, viewing POI info, comments, and ratings
 import React, { useState, useRef } from 'react';
-import { ThemeProvider, createTheme, Button, Text, Icon } from '@rneui/themed';
+import { ThemeProvider, createTheme, Button, Text, Icon, ListItem } from '@rneui/themed';
 import { View, ScrollView, Keyboard, Alert, TouchableOpacity, Image, KeyboardAvoidingView } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import axios from 'axios';
 import { DB_URL } from '@env';
+import { CustomTextInput } from '../components/signup-login-inputs';
 
 export default PoiPage = ({ navigation, route }) => {
-	// Passed in POI
-	const { POI } = route.params;
+	// Passed in POI and user
+	const { POI, user } = route.params;
 
 	//useStates
 	const [comments, setComments] = useState(POI.posts);
+	const [ratings, setRatings] = useState(POI.ratings);
+
+	const [newComment, setNewComment] = useState('');
+	const [isSaving, setIsSaving] = useState(false);
 
 	// References for our inputs
 	let commentInput = useRef(null);
 
 	const handleComment = () => {
-		// handle axois here
+		if (newComment == '') {
+			commentInput.current?.shake();
+		} else {
+			setIsSaving(true);
+
+			let commentData = { comment: newComment, author: user, poi: POI, name: user.display };
+			axios
+				.post(`${DB_URL}/post`, commentData)
+				.then(function (response) {
+					console.log(response);
+					console.log(response.data.data);
+					setNewComment('');
+					setComments([...comments, commentData]);
+					//clearStates();
+				})
+				.finally(() => {
+					setIsSaving(false);
+				})
+				.catch(function (error) {
+					console.warn(error);
+				});
+		}
 	};
 
 	return (
@@ -40,8 +66,47 @@ export default PoiPage = ({ navigation, route }) => {
 							/>
 							<Text h1>{POI?.title ?? 'Title'}</Text>
 							<Text h3>{POI?.description ?? 'Description'}</Text>
-							<Text h3>{POI?.posts[0].comment ?? 'Comment 1'}</Text>
-							<Text h3>{comments[0].comment ?? 'Comment 1'}</Text>
+							{comments?.map((comment, index) => (
+								<ListItem
+									bottomDivider={true}
+									key={index}
+								>
+									<ListItem.Content>
+										<ListItem.Title>{comment.authorId}</ListItem.Title>
+										<ListItem.Subtitle>{comment.comment}</ListItem.Subtitle>
+									</ListItem.Content>
+								</ListItem>
+							))}
+
+							<CustomTextInput
+								ref={(input) => (commentInput = input)}
+								disabled={isSaving}
+								value={newComment}
+								onChangeText={(text) => setNewComment(text)}
+								iconName='comment-outline'
+								iconType='material-community'
+								placeholder='Enter comment...'
+							/>
+							<Button
+								disabled={isSaving}
+								loading={isSaving}
+								loadingProps={{ color: '#FFFFFF', size: 31.5 }}
+								title='Comment'
+								type='outline'
+								raised
+								containerStyle={{ marginHorizontal: 100, marginTop: 20 }}
+								onPress={() => handleComment()}
+								icon={
+									<Icon
+										name='comment-plus-outline'
+										type='material-community'
+										style={{ marginLeft: 10 }}
+										color='#FFFFFF'
+										size={25}
+									/>
+								}
+								iconRight={true}
+							/>
 						</View>
 					</ScrollView>
 				</KeyboardAvoidingView>

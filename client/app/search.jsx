@@ -8,7 +8,6 @@ import * as Search from '../components/search-inputs';
 import Geocoder from 'react-native-geocoding';
 import { GOOGLE_API, DB_URL } from '@env';
 import axios from 'axios';
-console.log(DB_URL);
 
 Geocoder.init(GOOGLE_API);
 
@@ -36,6 +35,7 @@ const generateAddress = (stateName, cityName, zipcode) => {
 
 export default SearchPage = ({ navigation, route }) => {
 	const { email, username, state, display, id } = route.params;
+	const user = route.params;
 
 	const [dropFocus, setDropFocus] = useState(false); // Is the dropdnown in focus or not
 	const [stateName, setStateName] = useState(state);
@@ -64,7 +64,7 @@ export default SearchPage = ({ navigation, route }) => {
 				let LatLng = locData.geometry.location;
 				let Bounds = locData.geometry.bounds;
 				let delta = Bounds.northeast.lat - Bounds.southwest.lat;
-				navigation.navigate('map', { lat: LatLng.lat, lng: LatLng.lng, latDelta: delta, POIs: POIs, user: route.params });
+				navigation.navigate('map', { lat: LatLng.lat, lng: LatLng.lng, latDelta: delta, POIs: POIs, user: user });
 			})
 			.finally(() => {
 				setIsSearching(false);
@@ -154,7 +154,7 @@ export default SearchPage = ({ navigation, route }) => {
 								titleStyle={{ fontSize: 20 }}
 								containerStyle={{ marginTop: '5%', marginLeft: '70%', marginRight: '5%' }}
 								onPress={() => {
-									navigation.navigate('profile', { email, username, state, display, id });
+									navigation.navigate('profile', user);
 								}}
 							/>
 							<Text h1>Where Can I...</Text>
