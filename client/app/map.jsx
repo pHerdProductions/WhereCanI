@@ -149,20 +149,20 @@ export default MapPage = ({ route, navigation }) => {
 		newMarkerRef.current?.showCallout(); // When the new Marker is placed, we want to have the callout box be shown
 	}, [newPOI]);
 
-	const isFocused = useIsFocused();
+	// const isFocused = useIsFocused();
 
-	useEffect(() => {
-		if (isFocused) {
-			axios
-				.get(`${REACT_APP_DB_URL}/poi`)
-				.then(function (response) {
-					setPOIS(response.data.data);
-				})
-				.catch(function (error) {
-					console.warn(error);
-				});
-		}
-	}, [isFocused]);
+	// useEffect(() => {
+	// 	if (isFocused) {
+	// 		axios
+	// 			.get(`${REACT_APP_DB_URL}/poi`)
+	// 			.then(function (response) {
+	// 				setPOIS(response.data.data);
+	// 			})
+	// 			.catch(function (error) {
+	// 				console.warn(error);
+	// 			});
+	// 	}
+	// }, [isFocused]);
 
 	return (
 		<SafeAreaView style={styles.safeAreaView}>

@@ -71,7 +71,7 @@ export default SearchPage = ({ navigation, route }) => {
 			})
 			.catch((error) => console.warn(error));
 	};
-	
+
 	// Browse All POIs from the DB
 	const browseAllPOIs = () => {
 		Keyboard.dismiss();
