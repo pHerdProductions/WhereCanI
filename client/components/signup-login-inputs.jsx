@@ -198,4 +198,4 @@ const dropStyle = StyleSheet.create({
 	},
 });
 
-export { EmailInput, UsernameInput, PasswordInput, ConfirmPasswordInput, DisplayInput, StateDropDown };
+export { CustomTextInput, EmailInput, UsernameInput, PasswordInput, ConfirmPasswordInput, DisplayInput, StateDropDown };
